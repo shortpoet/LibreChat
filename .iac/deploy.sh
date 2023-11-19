@@ -4,9 +4,10 @@ set -e
 
 ENVIRONMENT=$1
 GO_LIVE=$2
+RUN_INIT=${3:-false}
 
 if [ -z "${ENVIRONMENT}" ] || [ -z "${GO_LIVE}" ]; then
-  echo "Usage: ./deploy.sh <ENVIRONMENT> <GO_LIVE>"
+  echo "Usage: ./deploy.sh <ENVIRONMENT> <GO_LIVE> <RUN_INIT>"
   exit 1
 fi
 
@@ -108,6 +109,12 @@ if [ "${GO_LIVE}" == "false" ]; then
 fi
 
 echo -e "\nDeploying to ${ENVIRONMENT} environment\n"
+
+if [ "${RUN_INIT}" == "true" ]; then
+  echo -e "\nRunning init\n"
+  npm ci
+  APP_TITLE=${title} npm run frontend
+fi
 
 # check if meilisearch is executable
 if [ ! -x "$(command -v ./meilisearch)" ]; then
