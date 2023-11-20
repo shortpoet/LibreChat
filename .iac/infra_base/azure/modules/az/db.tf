@@ -1,4 +1,6 @@
 resource "azurerm_cosmosdb_account" "librechat" {
+  count = var.use_cosmosdb ? 1 : 0
+
   name                      = "librechatdb${random_string.random_postfix.result}"
   resource_group_name       = azurerm_resource_group.this.name
   location                  = azurerm_resource_group.this.location
@@ -27,12 +29,12 @@ resource "azurerm_cosmosdb_account" "librechat" {
   capabilities {
     name = "EnableMongo"
   }
-  
+
   virtual_network_rule {
     id = azurerm_subnet.librechat_subnet.id
   }
 
   # enable_multiple_write_locations = false
   is_virtual_network_filter_enabled = true
-  public_network_access_enabled = true
+  public_network_access_enabled     = true
 }
