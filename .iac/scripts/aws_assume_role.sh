@@ -2,8 +2,8 @@
 
 aws_assume_role () {
 
-  AWS_ACCESS_KEY_ID="$(pass cloud/aws/soriano.carlitos/users/Administrator/access_key_id)"
-  AWS_SECRET_ACCESS_KEY="$(pass cloud/aws/soriano.carlitos/users/Administrator/secret_access_key)"
+  AWS_ACCESS_KEY_ID="$(pass Amazon/AWS-shortpoet/terraform-user/AWS_ACCESS_KEY_ID)"
+  AWS_SECRET_ACCESS_KEY="$(pass Amazon/AWS-shortpoet/terraform-user/AWS_SECRET_ACCESS_KEY)"
   AWS_DEFAULT_REGION="us-east-1"
   export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION
 
