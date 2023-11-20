@@ -1,7 +1,6 @@
 resource "azurerm_cosmosdb_account" "librechat" {
-  count = var.use_cosmosdb ? 1 : 0
 
-  name                      = "librechatdb${random_string.random_postfix.result}"
+  name                      = local.librechat_cosmosdb_name
   resource_group_name       = azurerm_resource_group.this.name
   location                  = azurerm_resource_group.this.location
   offer_type                = "Standard"

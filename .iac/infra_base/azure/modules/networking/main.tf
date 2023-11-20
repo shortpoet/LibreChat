@@ -1,15 +1,15 @@
 resource "azurerm_virtual_network" "librechat_network" {
-  name                = "librechat_network"
-  address_space       = ["10.0.0.0/16"]
+  name                = local.librechat_vnet_name
+  address_space       = local.librechat_vnet_address_space
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
 }
 
 resource "azurerm_subnet" "librechat_subnet" {
-  name                 = "librechat_subnet"
+  name                 = local.librechat_subnet_name
   resource_group_name  = azurerm_resource_group.this.name
   virtual_network_name = azurerm_virtual_network.librechat_network.name
-  address_prefixes     = ["10.0.1.0/24"]
+  address_prefixes     = local.librechat_subnet_address_prefixes
 
   service_endpoints = ["Microsoft.AzureCosmosDB", "Microsoft.Web"]
 

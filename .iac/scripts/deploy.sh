@@ -6,25 +6,20 @@ provider="${1:-aws}"
 env="${2:-dev}"
 go_live="${3:-false}"
 
-aws_profile='terraform-admin'
-
-pass_azure_tenant='Azure/carlos@shortpoet/tenant_id'
-pass_azure_subscription='Azure/carlos@shortpoet/subscriptions/shortpoet/id'
-
-active_dir=$(pwd)
-script_dir=$(dirname "$0")
-repo_root=$(git rev-parse --show-toplevel)
-
-
-# shellcheck disable=SC1091
-. "$script_dir/aws_assume_role.sh"
-
 [[ "$*" == *--help* ]] && {
   echo "Usage: $0 [provider] [env] [go_live]"
   echo "  provider: aws, gcp, azure"
   echo "  env: dev, prod"
   exit 0
 }
+
+
+active_dir=$(pwd)
+script_dir=$(dirname "$0")
+repo_root=$(git rev-parse --show-toplevel)
+
+# shellcheck disable=SC1091
+. "$script_dir/aws_assume_role.sh"
 
 [[ "$provider" != "aws" && "$provider" != "gcp" && "$provider" != "azure" ]] && {
   echo "Usage: $0 [provider] [env] [go_live]"
@@ -42,8 +37,6 @@ repo_root=$(git rev-parse --show-toplevel)
   exit 1
 }
 
-echo -e "\nAsserting VARS for [${provider}] provider in [${env}] environment\n"
-
 is_pass_unlocked="$(pass test/unlocked)"
 echo "is_pass_unlocked: ${is_pass_unlocked}"
 
@@ -51,6 +44,62 @@ if [ "${is_pass_unlocked}" != "true" ]; then
   echo "Pass is locked. Please run 'pass unlock test/unlocked'"
   exit 1
 fi
+
+echo -e "\nAsserting VARS for [${provider}] provider in [${env}] environment\n"
+
+aws_profile='terraform-admin'
+
+# mongo_string="$(pass Cloud/atlas/mongodb/soriano.carlos/LibreChat/connection_string)"
+# # openai_api_key="user_provided"
+# openai_api_key="$(pass Cloud/openai/ai-maps/dev/api_key)"
+# meili_master_key="$(pass Cloud/meili/LibreChat/dev/meili_master_key)"
+# jwt_secret="$(pass Deployments/LibreChat/dev/jwt_secret)"
+# jwt_refresh_secret="$(pass Deployments/LibreChat/dev/jwt_refresh_secret)"
+# github_client_id="$(pass Github/oauth/ai-maps/preview/GITHUB_CLIENT_ID)"
+# github_client_secret="$(pass Github/oauth/ai-maps/preview/GITHUB_CLIENT_SECRET)"
+
+pass_azure_tenant='Azure/carlos@shortpoet/tenant_id'
+pass_azure_subscription='Azure/carlos@shortpoet/subscriptions/shortpoet/id'
+
+pass_plugins_creds_key="Deployments/LibreChat/$env/plugins_creds_key"
+pass_plugins_creds_iv="Deployments/LibreChat/$env/plugins_creds_iv"
+
+pass_mongo_string="Cloud/atlas/mongodb/soriano.carlos/LibreChat/connection_string"
+pass_openai_api_key="Cloud/openai/ai-maps/$env/api_key"
+
+pass_meili_master_key="Cloud/meili/LibreChat/$env/meili_master_key"
+
+pass_jwt_secret="Deployments/LibreChat/$env/jwt_secret"
+pass_jwt_refresh_secret="Deployments/LibreChat/$env/jwt_refresh_secret"
+
+pass_github_client_id="Github/oauth/ai-maps/preview/GITHUB_CLIENT_ID"
+pass_github_client_secret="Github/oauth/ai-maps/preview/GITHUB_CLIENT_SECRET"
+
+
+vars_to_check=(
+  "mongo_string"
+  "openai_api_key"
+  "meili_master_key"
+  "jwt_secret"
+  "jwt_refresh_secret"
+  "github_client_id"
+  "github_client_secret"
+)
+
+for var in "${vars_to_check[@]}"; do
+  check="pass_$var"
+  echo -e "\nChecking ${!check}"
+  secret=$(pass "${!check}")
+  if [[ -z "$secret" ]]; then
+    echo "Missing ${var} in pass -> generating"
+    length=64
+    [[ "$check" == "pass_plugins_creds_iv" ]] && length=16
+    secret=$(pass generate -n "$secret" "$length")
+    # exit 1
+  else
+    echo "${var} is set"
+  fi
+done
 
 login_aws() {
   aws sts get-caller-identity --profile "$aws_profile" >/dev/null || \

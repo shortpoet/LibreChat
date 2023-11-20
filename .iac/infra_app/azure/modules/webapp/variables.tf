@@ -1,3 +1,13 @@
+variable "subscription_id" {
+  type        = string
+  description = "The subscription ID to use for the Azure resources"
+}
+
+variable "environment" {
+  type        = string
+  description = "Environment of the application. A corresponding tag would be created on the created resources if `var.default_tags_enabled` is `true`."
+}
+
 variable "location" {
   description = "The location where all resources will be deployed"
   default     = "westeurope"
@@ -6,6 +16,11 @@ variable "location" {
 variable "app_title" {
   description = "The title that librechat will display"
   default     = "librechat"
+}
+
+variable "app_service_sku_name" {
+  description = "size of the VM that runs the librechat app. F1 is free but limited to 1h per day."
+  default     = "B1"
 }
 
 variable "openai_key" {
@@ -38,26 +53,34 @@ variable "palm_key" {
   sensitive   = true
 }
 
-variable "app_service_sku_name" {
-  description = "size of the VM that runs the librechat app. F1 is free but limited to 1h per day."
-  default     = "B1"
+variable "plugin_creds_key" {
+  description = "Plugin Creds Key"
+  default     = "f34be427ebb29de8d88c107a71546019685ed8b241d8f2ed00c3df97ad2566f0"
+  sensitive   = true
+}
+
+variable "plugin_creds_iv" {
+  description = "Plugin Creds IV"
+  default     = "e2341419ec3dd3d19b13a1a87fafcbfb"
+  sensitive   = true
+}
+
+variable "jwt_secret" {
+  description = "JWT Secret"
+  default     = "16f8c0ef4a5d391b26034086c628469d3f9f497f08163ab9b40137092f2909ef"
+  sensitive   = true
+}
+
+variable "jwt_refresh_secret" {
+  description = "JWT Refresh Secret"
+  default     = "eaa5191f2914e30b9387fd84e254e4ba6fc51b4654968a9b0803b456a54b8418"
+  sensitive   = true
 }
 
 variable "mongo_uri" {
   description = "Connection string for the mongodb"
   default     = ""
   sensitive   = true
-}
-
-variable "use_cosmosdb" {
-  type        = bool
-  description = "Flag to enable/disable cosmosdb"
-  default     = false
-}
-
-variable "use_cosmosdb_free_tier" {
-  description = "Flag to enable/disable free tier of cosmosdb. This needs to be false if another instance already uses free tier."
-  default     = true
 }
 
 variable "deployments" {

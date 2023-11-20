@@ -10,25 +10,19 @@ output "ressource_group_name" {
 }
 
 output "libre_chat_url" {
-  value = "${azurerm_linux_web_app.librechat.name}.azurewebsites.net"
+  value = local.libre_chat_url
 }
 
 output "meilisearch_url" {
-  value = "${azurerm_linux_web_app.meilisearch.name}.azurewebsites.net"
+  value = local.meilisearch_url
 }
 
 output "azure_openai_api_key" {
-  value = "${module.openai.openai_primary_key}"
+  value     = module.openai.openai_primary_key
   sensitive = true
 }
 
 output "azure_openai_endpoint" {
-  value = "${module.openai.openai_endpoint}"
+  value     = module.openai.openai_endpoint
   sensitive = true
 }
-
-
-# output "meilisearch_master_key" {
-#   description = "MeiliSearch Master Key"
-#   value       = random_string.meilisearch_master_key
-# }
