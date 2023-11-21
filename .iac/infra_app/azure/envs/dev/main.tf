@@ -1,14 +1,16 @@
-resource "azurerm_resource_group" "this" {
+resource "azurerm_resource_group" "librechat" {
   name     = local.librechat_resource_group_name
   location = local.location
 }
 
 module "openai" {
   # application_name = "openai_service_librechat"
-  source                        = "../openai"
-  version                       = "0.1.1"
-  resource_group_name           = azurerm_resource_group.this.name
-  location                      = azurerm_resource_group.this.location
+  source = "../../modules/networking"
+
+  subscription_id               = local.subscription_id
+  environment                   = local.environment
+  resource_group_name           = azurerm_resource_group.librechat.name
+  location                      = azurerm_resource_group.librechat.location
   public_network_access_enabled = true
   # private_endpoint = {
   #   "pe_endpoint" = {
