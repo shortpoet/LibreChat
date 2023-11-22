@@ -9,10 +9,12 @@ module "networking" {
 
   subscription_id      = local.subscription_id
   environment          = local.environment
-  resource_group_name  = azurerm_resource_group.librechat.name
   location             = azurerm_resource_group.librechat.location
+  resource_group_name  = azurerm_resource_group.librechat.name
+  default_tags_enabled = local.default_tags_enabled
+  tags                 = local.tags
   application_name     = local.application_name
-  default_tags_enabled = true
+
   # private_endpoint = {
   #   "pe_endpoint" = {
   #     private_dns_entry_enabled       = true
@@ -30,11 +32,15 @@ module "networking" {
 module "openai" {
   source = "../../modules/openai"
 
-  subscription_id               = local.subscription_id
-  environment                   = local.environment
-  resource_group_name           = azurerm_resource_group.librechat.name
-  location                      = azurerm_resource_group.librechat.location
-  public_network_access_enabled = true
-  deployment                    = var.deployments
+  subscription_id      = local.subscription_id
+  environment          = local.environment
+  location             = azurerm_resource_group.librechat.location
+  resource_group_name  = azurerm_resource_group.librechat.name
+  default_tags_enabled = local.default_tags_enabled
+  tags                 = local.tags
+  application_name     = local.application_name
+
+  public_network_access_enabled = local.public_network_access_enabled
+  deployment                    = local.openai_deployment
 
 }
