@@ -23,6 +23,11 @@ variable "use_cosmosdb_free_tier" {
   default     = true
 }
 
+variable "cosmosdb_vnet_rule_subnet_id" {
+  type        = string
+  description = "The ID of the subnet where the cosmosdb vnet rule will be deployed"
+}
+
 variable "public_network_access_enabled" {
   description = "(Optional) Specifies whether public network access is allowed"
   type        = bool

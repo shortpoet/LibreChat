@@ -9,7 +9,7 @@ resource "azurerm_private_endpoint" "this" {
   private_service_connection {
     is_manual_connection           = each.value.is_manual_connection
     name                           = each.value.private_service_connection_name
-    private_connection_resource_id = azurerm_cognitive_account.this.id
+    private_connection_resource_id = var.pe_private_connection_resource_id
     subresource_names              = var.pe_subresource
   }
   dynamic "private_dns_zone_group" {

@@ -1,3 +1,4 @@
+## Common ########################
 variable "subscription_id" {
   type        = string
   description = "The subscription ID to use for the Azure resources"
@@ -13,6 +14,39 @@ variable "location" {
   default     = "westeurope"
 }
 
+variable "resource_group_name" {
+  type        = string
+  description = "The name of the resource group in which to create the resources"
+}
+
+variable "application_name" {
+  type        = string
+  default     = ""
+  description = "Name of the application. A corresponding tag would be created on the created resources if `var.default_tags_enabled` is `true`."
+}
+
+variable "default_tags_enabled" {
+  type        = bool
+  default     = false
+  description = "Determines whether or not default tags are applied to resources. If set to true, tags will be applied. If set to false, tags will not be applied."
+  nullable    = false
+}
+
+variable "tags" {
+  type        = map(string)
+  default     = {}
+  description = "(Optional) A mapping of tags to assign to the resource."
+  nullable    = false
+}
+
+## Networking ###########################
+
+variable "app_service_subnet_id" {
+  type        = string
+  description = "The ID of the subnet where the app service will be deployed"
+}
+
+## App ########################
 variable "app_title" {
   description = "The title that librechat will display"
   default     = "librechat"
@@ -83,34 +117,34 @@ variable "mongo_uri" {
   sensitive   = true
 }
 
-variable "deployments" {
-  description = "(Optional) Specifies the deployments of the Azure OpenAI Service"
+variable "deployment" {
   type = map(object({
     name            = string
-    rai_policy_name = string
     model_format    = string
     model_name      = string
     model_version   = string
     scale_type      = string
+    rai_policy_name = optional(string)
+    capacity        = optional(number)
   }))
-  default = {
-    "chat_model" = {
-      name            = "gpt-35-turbo"
-      rai_policy_name = "Microsoft.Default"
-      model_name      = "gpt-35-turbo"
-      model_format    = "OpenAI"
-      model_version   = "0301"
-      scale_type      = "Standard"
-    },
-    "embedding_model" = {
-      name            = "text-embedding-ada-002"
-      rai_policy_name = "Microsoft.Default"
-      model_format    = "OpenAI"
-      model_name      = "text-embedding-ada-002"
-      model_version   = "2"
-      scale_type      = "Standard"
-    }
-  }
+  default     = {}
+  description = <<-DESCRIPTION
+      type = map(object({
+        name                 = (Required) The name of the Cognitive Services Account Deployment. Changing this forces a new resource to be created.
+        cognitive_account_id = (Required) The ID of the Cognitive Services Account. Changing this forces a new resource to be created.
+        model = {
+          model_format  = (Required) The format of the Cognitive Services Account Deployment model. Changing this forces a new resource to be created. Possible value is OpenAI.
+          model_name    = (Required) The name of the Cognitive Services Account Deployment model. Changing this forces a new resource to be created.
+          model_version = (Required) The version of Cognitive Services Account Deployment model.
+        }
+        scale = {
+          scale_type = (Required) Deployment scale type. Possible value is Standard. Changing this forces a new resource to be created.
+        }
+        rai_policy_name = (Optional) The name of RAI policy. Changing this forces a new resource to be created.
+        capacity = (Optional) Tokens-per-Minute (TPM). The unit of measure for this field is in the thousands of Tokens-per-Minute. Defaults to 1 which means that the limitation is 1000 tokens per minute.
+      }))
+  DESCRIPTION
+  nullable    = false
 }
 
 variable "azure_openai_api_deployment_name" {
@@ -131,6 +165,16 @@ variable "azure_openai_api_version" {
 variable "azure_openai_api_embeddings_deployment_name" {
   description = "(Optional) The deployment name for embedding; if deployments.embedding_model.name is defined, the default value is that value."
   default     = ""
+}
+
+variable "azure_api_key" {
+  type        = string
+  description = "Azure API Key" # module.openai.openai_primary_key
+}
+
+variable "azure_openai_endpoint" {
+  type        = string
+  description = "Azure OpenAI Endpoint" # module.openai.openai_endpoint
 }
 
 variable "public_network_access_enabled" {

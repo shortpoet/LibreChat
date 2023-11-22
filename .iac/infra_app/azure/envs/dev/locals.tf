@@ -9,7 +9,11 @@ locals {
 
   librechat_resource_group_name = "librechat-${local.environment}"
 
-  public_network_access_enabled = true
+  public_network_access_enabled = var.public_network_access_enabled
+
+  # AI
+  cognitive_account_name                  = "librechat-cognitive-${local.environment}"
+  cognitive_account_custom_subdomain_name = "librechat-shortpoet-${local.environment}"
   openai_deployment = {
     "chat_model" = {
       name            = "gpt-35-turbo"

@@ -1,19 +1,22 @@
 locals {
   # Common
-  subscription_id               = var.subscription_id
-  environment                   = var.environment
-  location                      = var.location
-  app_title                     = "LibreChat-Shortpoet"
+  subscription_id      = var.subscription_id
+  environment          = var.environment
+  location             = var.location
+  default_tags_enabled = true
+  tags                 = {}
+  application_name     = "openai_service_librechat_${local.environment}"
+
+  # App
   librechat_resource_group_name = "librechat-${local.environment}"
+  app_title                     = "LibreChat-Shortpoet"
 
   # Networking
-  librechat_vnet_name               = "librechat-vnet-${local.environment}"
-  librechat_vnet_address_space      = ["10.0.0.0/16"]
-  librechat_subnet_name             = "librechat-subnet-${local.environment}"
-  librechat_subnet_address_prefixes = ["10.0.1.0/24"]
+  app_service_subnet_id = var.app_service_subnet_id
 
   # App Service
   app_service_sku_name = var.app_service_sku_name
+
   # LibreChat App
   librechat_app_name = "librechatapp-${local.environment}"
   libre_chat_url     = "${azurerm_linux_web_app.librechat.name}.azurewebsites.net"
@@ -29,12 +32,12 @@ locals {
 
     APP_TITLE = local.app_title
 
-    AZURE_API_KEY                                = module.openai.openai_primary_key
-    AZURE_OPENAI_API_INSTANCE_NAME               = split("//", split(".", module.openai.openai_endpoint)[0])[1]
-    AZURE_OPENAI_API_DEPLOYMENT_NAME             = var.azure_openai_api_deployment_name != "" ? var.azure_openai_api_deployment_name : (contains(keys(var.deployments), "chat_model") ? var.deployments.chat_model.name : "")
+    AZURE_API_KEY                                = var.azure_api_key
+    AZURE_OPENAI_API_INSTANCE_NAME               = split("//", split(".", var.azure_openai_endpoint)[0])[1]
+    AZURE_OPENAI_API_DEPLOYMENT_NAME             = var.azure_openai_api_deployment_name != "" ? var.azure_openai_api_deployment_name : (contains(keys(var.deployment), "chat_model") ? var.deployment.chat_model.name : "")
     AZURE_OPENAI_API_VERSION                     = var.azure_openai_api_version
-    AZURE_OPENAI_API_COMPLETIONS_DEPLOYMENT_NAME = var.azure_openai_api_completions_deployment_name != "" ? var.azure_openai_api_completions_deployment_name : (contains(keys(var.deployments), "chat_model") ? var.deployments.chat_model.name : "")
-    AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME  = var.azure_openai_api_embeddings_deployment_name != "" ? var.azure_openai_api_embeddings_deployment_name : (contains(keys(var.deployments), "embedding_model") ? var.deployments.embedding_model.name : "")
+    AZURE_OPENAI_API_COMPLETIONS_DEPLOYMENT_NAME = var.azure_openai_api_completions_deployment_name != "" ? var.azure_openai_api_completions_deployment_name : (contains(keys(var.deployment), "chat_model") ? var.deployment.chat_model.name : "")
+    AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME  = var.azure_openai_api_embeddings_deployment_name != "" ? var.azure_openai_api_embeddings_deployment_name : (contains(keys(var.deployment), "embedding_model") ? var.deployment.embedding_model.name : "")
 
     CHATGPT_TOKEN  = var.chatgpt_token
     CHATGPT_MODELS = "text-davinci-002-render-sha,gpt-4"

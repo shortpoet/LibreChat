@@ -1,7 +1,7 @@
 resource "azurerm_service_plan" "librechat" {
   name                = local.librechat_app_name
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
+  location            = data.azurerm_resource_group.this.location
+  resource_group_name = data.azurerm_resource_group.this.name
   os_type             = "Linux"
 
   sku_name = local.app_service_sku_name
@@ -9,13 +9,13 @@ resource "azurerm_service_plan" "librechat" {
 
 resource "azurerm_linux_web_app" "librechat" {
   name                          = local.librechat_app_name
-  location                      = azurerm_resource_group.this.location
-  resource_group_name           = azurerm_resource_group.this.name
+  location                      = data.azurerm_resource_group.this.location
+  resource_group_name           = data.azurerm_resource_group.this.name
   service_plan_id               = azurerm_service_plan.librechat.id
   public_network_access_enabled = true
   https_only                    = true
   app_settings                  = local.librechat_app_settings
-  virtual_network_subnet_id     = azurerm_subnet.librechat_subnet.id
+  virtual_network_subnet_id     = local.app_service_subnet_id
 
   site_config {
     minimum_tls_version = "1.2"
@@ -61,15 +61,15 @@ resource "azurerm_linux_web_app" "librechat" {
 #TODO: privately communicate between librechat and meilisearch, right now it is via public internet
 resource "azurerm_linux_web_app" "meilisearch" {
   name                = local.meilisearch_app_name
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
+  location            = data.azurerm_resource_group.this.location
+  resource_group_name = data.azurerm_resource_group.this.name
   service_plan_id     = azurerm_service_plan.librechat.id
   app_settings        = local.meilisearch_app_settings
 
   site_config {
     always_on = "true"
     ip_restriction {
-      virtual_network_subnet_id = azurerm_subnet.librechat_subnet.id
+      virtual_network_subnet_id = local.app_service_subnet_id
       priority                  = 100
       name                      = "Allow from LibreChat subnet"
       action                    = "Allow"

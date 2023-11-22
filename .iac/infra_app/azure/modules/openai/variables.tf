@@ -42,14 +42,12 @@ variable "tags" {
 ## Cognitive Account ########################
 variable "account_name" {
   type        = string
-  default     = ""
-  description = "Specifies the name of the Cognitive Service Account. Changing this forces a new resource to be created. Leave this variable as default would use a default name with random suffix."
+  description = "Specifies the name of the Cognitive Service Account. Changing this forces a new resource to be created."
 }
 
 variable "custom_subdomain_name" {
   type        = string
-  default     = ""
-  description = "The subdomain name used for token-based authentication. Changing this forces a new resource to be created. Leave this variable as default would use a default name with random suffix."
+  description = "The subdomain name used for token-based authentication. Changing this forces a new resource to be created."
 }
 
 variable "customer_managed_key" {

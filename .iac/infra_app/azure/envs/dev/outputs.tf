@@ -6,15 +6,15 @@
 
 output "ressource_group_name" {
   description = "name of the created ressource group"
-  value       = azurerm_resource_group.this.name
+  value       = azurerm_resource_group.librechat.name
 }
 
 output "libre_chat_url" {
-  value = local.libre_chat_url
+  value = module.webapp.libre_chat_url
 }
 
 output "meilisearch_url" {
-  value = local.meilisearch_url
+  value = module.webapp.meilisearch_url
 }
 
 output "azure_openai_api_key" {
@@ -25,4 +25,8 @@ output "azure_openai_api_key" {
 output "azure_openai_endpoint" {
   value     = module.openai.openai_endpoint
   sensitive = true
+}
+
+output "private_ip_addresses" {
+  value = module.networking.private_ip_addresses
 }

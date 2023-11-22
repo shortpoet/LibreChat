@@ -13,11 +13,10 @@ locals {
   librechat_vnet_address_space      = ["10.0.0.0/16"]
   librechat_subnet_name             = "librechat-subnet-${local.environment}"
   librechat_subnet_address_prefixes = ["10.0.1.0/24"]
-  custom_subdomain_name             = coalesce(var.custom_subdomain_name, "azure-openai-${random_integer.this.result}")
 
   # Private Endpoint
-  private_dns_zone_id   = length(var.private_endpoint) > 0 ? try(azurerm_private_dns_zone.dns_zone[0].id, data.azurerm_private_dns_zone.dns_zone[0].id) : null
-  private_dns_zone_name = length(var.private_endpoint) > 0 ? try(azurerm_private_dns_zone.dns_zone[0].name, data.azurerm_private_dns_zone.dns_zone[0].name) : null
+  private_dns_zone_id   = length(var.private_endpoint) > 0 ? data.azurerm_private_dns_zone.dns_zone[0].id : null
+  private_dns_zone_name = length(var.private_endpoint) > 0 ? data.azurerm_private_dns_zone.dns_zone[0].name : null
 
   # Cognitive Account
   tags = merge(var.default_tags_enabled ? {

@@ -74,6 +74,11 @@ variable "pe_subresource" {
   description = "A list of subresource names which the Private Endpoint is able to connect to. `subresource_names` corresponds to `group_id`. Possible values are detailed in the product [documentation](https://docs.microsoft.com/azure/private-link/private-endpoint-overview#private-link-resource) in the `Subresources` column. Changing this forces a new resource to be created."
 }
 
+variable "pe_private_connection_resource_id" {
+  type        = string
+  description = "The ID of the resource to connect to through this private endpoint. Changing this forces a new resource to be created."
+}
+
 variable "private_dns_zone" {
   type = object({
     name                = string

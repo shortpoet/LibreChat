@@ -1,8 +1,8 @@
 resource "azurerm_cosmosdb_account" "librechat" {
 
   name                      = local.librechat_cosmosdb_name
-  resource_group_name       = azurerm_resource_group.this.name
-  location                  = azurerm_resource_group.this.location
+  resource_group_name       = data.azurerm_resource_group.this.name
+  location                  = data.azurerm_resource_group.this.location
   offer_type                = "Standard"
   kind                      = "MongoDB"
   enable_automatic_failover = false
@@ -16,7 +16,7 @@ resource "azurerm_cosmosdb_account" "librechat" {
   }
 
   geo_location {
-    location          = azurerm_resource_group.this.location
+    location          = data.azurerm_resource_group.this.location
     failover_priority = 0
   }
   capabilities {
@@ -30,7 +30,7 @@ resource "azurerm_cosmosdb_account" "librechat" {
   }
 
   virtual_network_rule {
-    id = azurerm_subnet.librechat_subnet.id
+    id = local.cosmosdb_vnet_rule_subnet_id
   }
 
   # enable_multiple_write_locations = false

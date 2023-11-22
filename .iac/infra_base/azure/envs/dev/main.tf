@@ -12,4 +12,6 @@ module "networking" {
   resource_group_name = azurerm_resource_group.networking.name
 
   private_dns_zone_name = local.private_dns_zone_name
+
+  depends_on = [azurerm_resource_group.networking]
 }
