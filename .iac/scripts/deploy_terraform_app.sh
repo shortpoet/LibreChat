@@ -43,6 +43,7 @@ if [ "${RUN_INIT}" == "true" ]; then
 fi
 # cmd="terraform import $var_string \"module.webapp.azurerm_linux_web_app.librechat\" \"subscriptions/060cfbfe-45ab-4a1c-84fc-c056e94221be/resourceGroups/librechat-dev/providers/Microsoft.Web/sites/librechatapp-dev\""
 cmd="terraform plan $var_string -out $ENVIRONMENT.tfplan"
+# cmd="terraform destroy $var_string -auto-approve"
 # echo "$cmd"
 eval "$cmd"
 

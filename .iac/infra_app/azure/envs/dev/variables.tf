@@ -32,6 +32,11 @@ variable "app_service_sku_name" {
   description = "size of the VM that runs the librechat app. F1 is free but limited to 1h per day."
 }
 
+variable "deploy_openai" {
+  type        = bool
+  description = "Flag to enable/disable OpenAI deployment"
+}
+
 variable "debug_openai" {
   type        = bool
   description = "Flag to enable/disable debug mode for OpenAI"
