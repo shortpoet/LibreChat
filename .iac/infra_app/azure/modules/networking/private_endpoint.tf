@@ -22,14 +22,6 @@ resource "azurerm_private_endpoint" "this" {
   }
 }
 
-resource "azurerm_private_dns_zone" "dns_zone" {
-  count = length(var.private_endpoint) > 0 && var.private_dns_zone == null ? 1 : 0
-
-  name                = "privatelink.openai.azure.com"
-  resource_group_name = data.azurerm_resource_group.this.name
-  tags                = local.tags
-}
-
 resource "azurerm_private_dns_zone_virtual_network_link" "dns_zone_link" {
   for_each = var.private_endpoint
 

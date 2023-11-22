@@ -11,4 +11,5 @@ module "networking" {
   environment         = local.environment
   resource_group_name = azurerm_resource_group.networking.name
 
+  private_dns_zone_name = local.private_dns_zone_name
 }

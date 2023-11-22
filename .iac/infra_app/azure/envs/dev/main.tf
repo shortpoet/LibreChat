@@ -3,15 +3,16 @@ resource "azurerm_resource_group" "librechat" {
   location = local.location
 }
 
-module "openai" {
-  # application_name = "openai_service_librechat"
+module "networking" {
+
   source = "../../modules/networking"
 
-  subscription_id               = local.subscription_id
-  environment                   = local.environment
-  resource_group_name           = azurerm_resource_group.librechat.name
-  location                      = azurerm_resource_group.librechat.location
-  public_network_access_enabled = true
+  subscription_id      = local.subscription_id
+  environment          = local.environment
+  resource_group_name  = azurerm_resource_group.librechat.name
+  location             = azurerm_resource_group.librechat.location
+  application_name     = local.application_name
+  default_tags_enabled = true
   # private_endpoint = {
   #   "pe_endpoint" = {
   #     private_dns_entry_enabled       = true
@@ -24,9 +25,16 @@ module "openai" {
   #     vnet_rg_name                    = azurerm_resource_group.this.name
   #   }
   # }
-  deployment = var.deployments
-  depends_on = [
-    azurerm_resource_group.this,
-    # module.vnet
-  ]
+}
+
+module "openai" {
+  source = "../../modules/openai"
+
+  subscription_id               = local.subscription_id
+  environment                   = local.environment
+  resource_group_name           = azurerm_resource_group.librechat.name
+  location                      = azurerm_resource_group.librechat.location
+  public_network_access_enabled = true
+  deployment                    = var.deployments
+
 }

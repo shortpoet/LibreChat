@@ -1,23 +1,49 @@
-variable "location" {
+## Common ########################
+variable "subscription_id" {
   type        = string
-  description = "Azure OpenAI deployment region. Set this variable to `null` would use resource group's location."
+  description = "The subscription ID to use for the Azure resources"
+}
+
+variable "environment" {
+  type        = string
+  description = "Environment of the application. A corresponding tag would be created on the created resources if `var.default_tags_enabled` is `true`."
+}
+
+variable "location" {
+  description = "The location where all resources will be deployed"
+  default     = "westeurope"
 }
 
 variable "resource_group_name" {
   type        = string
-  description = "Name of the azure resource group to use. The resource group must exist."
-}
-
-variable "account_name" {
-  type        = string
-  default     = ""
-  description = "Specifies the name of the Cognitive Service Account. Changing this forces a new resource to be created. Leave this variable as default would use a default name with random suffix."
+  description = "The name of the resource group in which to create the resources"
 }
 
 variable "application_name" {
   type        = string
   default     = ""
   description = "Name of the application. A corresponding tag would be created on the created resources if `var.default_tags_enabled` is `true`."
+}
+
+variable "default_tags_enabled" {
+  type        = bool
+  default     = false
+  description = "Determines whether or not default tags are applied to resources. If set to true, tags will be applied. If set to false, tags will not be applied."
+  nullable    = false
+}
+
+variable "tags" {
+  type        = map(string)
+  default     = {}
+  description = "(Optional) A mapping of tags to assign to the resource."
+  nullable    = false
+}
+
+## Cognitive Account ########################
+variable "account_name" {
+  type        = string
+  default     = ""
+  description = "Specifies the name of the Cognitive Service Account. Changing this forces a new resource to be created. Leave this variable as default would use a default name with random suffix."
 }
 
 variable "custom_subdomain_name" {
@@ -38,13 +64,6 @@ variable "customer_managed_key" {
       identity_client_id = (Optional) The Client ID of the User Assigned Identity that has access to the key. This property only needs to be specified when there're multiple identities attached to the OpenAI Account.
     })
   DESCRIPTION
-}
-
-variable "default_tags_enabled" {
-  type        = bool
-  default     = false
-  description = "Determines whether or not default tags are applied to resources. If set to true, tags will be applied. If set to false, tags will not be applied."
-  nullable    = false
 }
 
 variable "deployment" {
@@ -137,11 +156,6 @@ variable "dynamic_throttling_enabled" {
   description = "Determines whether or not dynamic throttling is enabled. If set to `true`, dynamic throttling will be enabled. If set to `false`, dynamic throttling will not be enabled."
 }
 
-variable "environment" {
-  type        = string
-  description = "Environment of the application. A corresponding tag would be created on the created resources if `var.default_tags_enabled` is `true`."
-}
-
 variable "fqdns" {
   type        = list(string)
   default     = null
@@ -196,12 +210,6 @@ variable "outbound_network_access_restricted" {
   description = "Whether outbound network access is restricted for the Cognitive Account. Defaults to `false`."
 }
 
-variable "pe_subresource" {
-  type        = list(string)
-  default     = ["account"]
-  description = "A list of subresource names which the Private Endpoint is able to connect to. `subresource_names` corresponds to `group_id`. Possible values are detailed in the product [documentation](https://docs.microsoft.com/azure/private-link/private-endpoint-overview#private-link-resource) in the `Subresources` column. Changing this forces a new resource to be created."
-}
-
 variable "public_network_access_enabled" {
   type        = bool
   default     = false
@@ -226,12 +234,5 @@ variable "storage" {
       identity_client_id = (Optional) The client ID of the managed identity associated with the storage resource.
     }))
   DESCRIPTION
-  nullable    = false
-}
-
-variable "tags" {
-  type        = map(string)
-  default     = {}
-  description = "(Optional) A mapping of tags to assign to the resource."
   nullable    = false
 }
