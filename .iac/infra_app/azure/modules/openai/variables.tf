@@ -11,7 +11,6 @@ variable "environment" {
 
 variable "location" {
   description = "The location where all resources will be deployed"
-  default     = "westeurope"
 }
 
 variable "resource_group_name" {

@@ -60,7 +60,7 @@ if [ "${is_pass_unlocked}" != "true" ]; then
   exit 1
 fi
 
-mongo_string="$(pass Cloud/atlas/mongodb/soriano.carlos/LibreChat/connection_string)"
+mongo_uri="$(pass Cloud/atlas/mongodb/soriano.carlos/LibreChat/connection_string)"
 # openai_api_key="user_provided"
 openai_api_key="$(pass Cloud/openai/ai-maps/dev/api_key)"
 meili_master_key="$(pass Cloud/meili/LibreChat/dev/meili_master_key)"
@@ -70,7 +70,7 @@ github_client_id="$(pass Github/oauth/ai-maps/preview/GITHUB_CLIENT_ID)"
 github_client_secret="$(pass Github/oauth/ai-maps/preview/GITHUB_CLIENT_SECRET)"
 
 vars_to_check=(
-  "mongo_string"
+  "mongo_uri"
   "openai_api_key"
   "meili_master_key"
   "jwt_secret"
@@ -130,7 +130,7 @@ APP_TITLE=${title} \
   HOST=${host} \
   PORT=${port} \
   CHECK_BALANCE=${check_balance} \
-  MONGO_URI=${mongo_string} \
+  MONGO_URI=${mongo_uri} \
   OPENAI_API_KEY=${openai_api_key} \
   DEBUG_OPENAI=${debug_openai} \
   DEBUG_PLUGINS=${debug_plugins} \

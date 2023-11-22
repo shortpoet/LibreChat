@@ -18,6 +18,7 @@ resource "azurerm_linux_web_app" "librechat" {
   virtual_network_subnet_id     = local.app_service_subnet_id
 
   site_config {
+    always_on           = local.app_service_sku_name != "F1" && local.app_service_sku_name != "D1" ? "true" : "false"
     minimum_tls_version = "1.2"
   }
 
@@ -67,7 +68,7 @@ resource "azurerm_linux_web_app" "meilisearch" {
   app_settings        = local.meilisearch_app_settings
 
   site_config {
-    always_on = "true"
+    always_on = local.app_service_sku_name != "F1" && local.app_service_sku_name != "D1" ? "true" : "false"
     ip_restriction {
       virtual_network_subnet_id = local.app_service_subnet_id
       priority                  = 100

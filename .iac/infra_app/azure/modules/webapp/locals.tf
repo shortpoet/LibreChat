@@ -24,7 +24,10 @@ locals {
     WEBSITE_RUN_FROM_PACKAGE = "1"
     HOST                     = "0.0.0.0"
     MONGO_URI                = var.mongo_uri
-    OPENAI_API_KEY           = var.openai_key
+    OPENAI_API_KEY           = var.openai_api_key
+    DEBUG_OPENAI             = var.debug_openai
+    DEBUG_PLUGINS            = var.debug_plugins
+    CHECK_BALANCE            = var.check_balance
     MEILI_MASTER_KEY         = random_string.meilisearch_master_key.result
     MEILI_HOST               = "${azurerm_linux_web_app.meilisearch.name}.azurewebsites.net"
     SEARCH                   = true
@@ -33,7 +36,7 @@ locals {
     APP_TITLE = local.app_title
 
     AZURE_API_KEY                                = var.azure_api_key
-    AZURE_OPENAI_API_INSTANCE_NAME               = split("//", split(".", var.azure_openai_endpoint)[0])[1]
+    AZURE_OPENAI_API_INSTANCE_NAME               = try(split("//", split(".", var.azure_openai_endpoint)[0])[1], "")
     AZURE_OPENAI_API_DEPLOYMENT_NAME             = var.azure_openai_api_deployment_name != "" ? var.azure_openai_api_deployment_name : (contains(keys(var.deployment), "chat_model") ? var.deployment.chat_model.name : "")
     AZURE_OPENAI_API_VERSION                     = var.azure_openai_api_version
     AZURE_OPENAI_API_COMPLETIONS_DEPLOYMENT_NAME = var.azure_openai_api_completions_deployment_name != "" ? var.azure_openai_api_completions_deployment_name : (contains(keys(var.deployment), "chat_model") ? var.deployment.chat_model.name : "")
@@ -62,8 +65,19 @@ locals {
     DOMAIN_SERVER      = "http://localhost:3080"
     DOMAIN_CLIENT      = "http://localhost:3080"
 
+    GITHUB_CLIENT_ID     = var.github_client_id
+    GITHUB_CLIENT_SECRET = var.github_client_secret
+    GITHUB_CALLBACK_URL  = "/oauth/github/callback"
+
+    EMAIL_SERVICE = var.email_service
+    EMAIL_USER    = var.email_user
+    EMAIL_PASS    = var.email_pass
+    EMAIL_FROM    = var.email_from
+
     VITE_SHOW_GOOGLE_LOGIN_OPTION = false
     ALLOW_REGISTRATION            = true
+    ALLOW_SOCIAL_LOGIN            = true
+    ALLOW_SOCIAL_REGISTRATION     = true
 
     SESSION_EXPIRY = (1000 * 60 * 60 * 24) * 7
 

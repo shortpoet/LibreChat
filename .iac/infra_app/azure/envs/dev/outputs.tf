@@ -17,16 +17,16 @@ output "meilisearch_url" {
   value = module.webapp.meilisearch_url
 }
 
-output "azure_openai_api_key" {
-  value     = module.openai.openai_primary_key
-  sensitive = true
-}
+# output "azure_openai_api_key" {
+#   value     = module.openai.openai_primary_key
+#   sensitive = true
+# }
 
-output "azure_openai_endpoint" {
-  value     = module.openai.openai_endpoint
-  sensitive = true
-}
+# output "azure_openai_endpoint" {
+#   value     = module.openai.openai_endpoint
+#   sensitive = true
+# }
 
-output "private_ip_addresses" {
-  value = module.networking.private_ip_addresses
-}
+# output "private_ip_addresses" {
+#   value = module.networking.private_ip_addresses
+# }

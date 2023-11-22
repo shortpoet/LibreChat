@@ -57,10 +57,19 @@ variable "app_service_sku_name" {
   default     = "B1"
 }
 
-variable "openai_key" {
+variable "openai_api_key" {
   description = "OpenAI API Key"
-  default     = ""
   sensitive   = true
+}
+
+variable "debug_openai" {
+  description = "Debug OpenAI"
+  default     = false
+}
+
+variable "debug_plugins" {
+  description = "Debug Plugins"
+  default     = false
 }
 
 variable "chatgpt_token" {
@@ -101,20 +110,57 @@ variable "plugin_creds_iv" {
 
 variable "jwt_secret" {
   description = "JWT Secret"
-  default     = "16f8c0ef4a5d391b26034086c628469d3f9f497f08163ab9b40137092f2909ef"
   sensitive   = true
 }
 
 variable "jwt_refresh_secret" {
   description = "JWT Refresh Secret"
-  default     = "eaa5191f2914e30b9387fd84e254e4ba6fc51b4654968a9b0803b456a54b8418"
   sensitive   = true
 }
 
 variable "mongo_uri" {
   description = "Connection string for the mongodb"
-  default     = ""
   sensitive   = true
+}
+
+variable "check_balance" {
+  description = "Check Balance"
+  default     = false
+}
+
+variable "meili_master_key" {
+  type        = string
+  description = "Meili Master Key"
+}
+
+variable "github_client_id" {
+  type        = string
+  description = "Github Client ID"
+}
+
+variable "github_client_secret" {
+  type        = string
+  description = "Github Client Secret"
+}
+
+variable "email_service" {
+  type        = string
+  description = "Email Service"
+}
+
+variable "email_user" {
+  type        = string
+  description = "Email User"
+}
+
+variable "email_pass" {
+  type        = string
+  description = "Email User"
+}
+
+variable "email_from" {
+  type        = string
+  description = "Email From"
 }
 
 variable "deployment" {
@@ -170,11 +216,13 @@ variable "azure_openai_api_embeddings_deployment_name" {
 variable "azure_api_key" {
   type        = string
   description = "Azure API Key" # module.openai.openai_primary_key
+  default     = ""
 }
 
 variable "azure_openai_endpoint" {
   type        = string
   description = "Azure OpenAI Endpoint" # module.openai.openai_endpoint
+  default     = ""
 }
 
 variable "public_network_access_enabled" {
