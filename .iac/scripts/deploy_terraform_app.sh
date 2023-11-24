@@ -3,18 +3,26 @@
 set -e
 
 ENVIRONMENT=$1
-GO_LIVE=$2
-RUN_INIT=${3:-false}
+CMD=$2
+GO_LIVE=$3
+RUN_INIT=${4:-false}
 
 cur_dir="$(pwd)"
 
 if [ -z "${ENVIRONMENT}" ] || [ -z "${GO_LIVE}" ]; then
-  echo "Usage: ./deploy.sh <ENVIRONMENT> <GO_LIVE> <RUN_INIT>"
+  echo "Usage: ./deploy.sh <ENVIRONMENT> <CMD> <GO_LIVE> <RUN_INIT>"
   exit 1
 fi
 
 if [ "${GO_LIVE}" != "true" ] && [ "${GO_LIVE}" != "false" ]; then
+  echo "Usage: ./deploy.sh <ENVIRONMENT> <CMD> <GO_LIVE> <RUN_INIT>"
   echo "GO_LIVE must be true or false"
+  exit 1
+fi
+
+if [ "${CMD}" != "plan" ] && [ "${CMD}" != "apply" ] && [ "${CMD}" != "destroy" ]; then
+  echo "Usage: ./deploy.sh <ENVIRONMENT> <CMD> <GO_LIVE> <RUN_INIT>"
+  echo "CMD must be plan, apply or destroy"
   exit 1
 fi
 
@@ -43,7 +51,15 @@ if [ "${RUN_INIT}" == "true" ]; then
 fi
 # cmd="terraform import $var_string \"module.webapp.azurerm_linux_web_app.librechat\" \"subscriptions/060cfbfe-45ab-4a1c-84fc-c056e94221be/resourceGroups/librechat-dev/providers/Microsoft.Web/sites/librechatapp-dev\""
 cmd="terraform plan $var_string -out $ENVIRONMENT.tfplan"
-# cmd="terraform destroy $var_string -auto-approve"
+cmd="terraform destroy $var_string -auto-approve"
+
+if [[ "${CMD}" == "plan" ]]; then
+  cmd="terraform plan $var_string -out $ENVIRONMENT.tfplan"
+elif [[ "${CMD}" == "apply" ]]; then
+  cmd="terraform apply --auto-approve $var_string $ENVIRONMENT.tfplan"
+elif [[ "${CMD}" == "destroy" ]]; then
+  cmd="terraform destroy $var_string -auto-approve"
+fi
 # echo "$cmd"
 eval "$cmd"
 
