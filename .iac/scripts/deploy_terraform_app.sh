@@ -27,7 +27,7 @@ if [ "${CMD}" != "plan" ] && [ "${CMD}" != "apply" ] && [ "${CMD}" != "destroy" 
 fi
 
 declare -A secrets=(
-  ["mongo_uri"]="Cloud/atlas/mongodb/soriano.carlos/LibreChat/connection_string"
+  ["mongo_uri"]="Cloud/atlas/mongodb/librechat/furtive-fox-88/connection_string"
   ["openai_api_key"]="Cloud/openai/ai-maps/dev/api_key"
   ["meili_master_key"]="Cloud/meili/LibreChat/dev/meili_master_key"
   ["jwt_secret"]="Deployments/LibreChat/dev/jwt_secret"

@@ -19,9 +19,9 @@ fi
 # app
 title='Shortpoet-LibreChat'
 port=3000
-domain_client='http://localhost:3080'
-domain_server='http://localhost:3080'
-host='localhost'
+domain_client='http://0.0.0.0:3080'
+domain_server='http://0.0.0.0:3080'
+host='0.0.0.0'
 # chat
 check_balance=false
 debug_openai=true
@@ -60,7 +60,7 @@ if [ "${is_pass_unlocked}" != "true" ]; then
   exit 1
 fi
 
-mongo_uri="$(pass Cloud/atlas/mongodb/soriano.carlos/LibreChat/connection_string)"
+mongo_uri="$(pass Cloud/atlas/mongodb/librechat/furtive-fox-88/connection_string)"
 # openai_api_key="user_provided"
 openai_api_key="$(pass Cloud/openai/ai-maps/dev/api_key)"
 meili_master_key="$(pass Cloud/meili/LibreChat/dev/meili_master_key)"
