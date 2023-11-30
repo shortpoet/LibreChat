@@ -1,6 +1,5 @@
 import type { TPreset } from 'librechat-data-provider';
-import { EModelEndpoint } from 'librechat-data-provider';
-import { alternateName } from '~/common';
+import { EModelEndpoint, alternateName } from 'librechat-data-provider';
 
 export const getPresetIcon = (preset: TPreset, Icon) => {
   return Icon({
@@ -25,7 +24,7 @@ export const getPresetTitle = (preset: TPreset) => {
     if (model) {
       _title += `: ${model}`;
     }
-  } else if (endpoint === EModelEndpoint.google) {
+  } else if (endpoint === EModelEndpoint.google || endpoint === EModelEndpoint.anthropic) {
     if (modelLabel) {
       _title = modelLabel;
     }

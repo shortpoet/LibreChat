@@ -29,6 +29,7 @@ export default {
   com_ui_of: 'of',
   com_ui_entries: 'Entries',
   com_ui_pay_per_call: 'All AI conversations in one place. Pay per call and not per month',
+  com_ui_new_footer: 'All AI conversations in one place.',
   com_ui_enter: 'Enter',
   com_ui_submit: 'Submit',
   com_ui_upload_success: 'Successfully uploaded file',
@@ -177,6 +178,7 @@ export default {
   com_endpoint_set_custom_name: 'Set a custom name, in case you can find this preset',
   com_endpoint_preset: 'preset',
   com_endpoint_presets: 'presets',
+  com_endpoint_preset_selected: 'Preset Active!',
   com_endpoint_preset_name: 'Preset Name',
   com_endpoint_new_topic: 'New Topic',
   com_endpoint: 'Endpoint',
@@ -227,6 +229,7 @@ export default {
   com_endpoint_config_key_google_service_account: 'Create a Service Account',
   com_endpoint_config_key_google_vertex_api_role:
     'Make sure to click \'Create and Continue\' to give at least the \'Vertex AI User\' role. Lastly, create a JSON key to import here.',
+  com_nav_welcome_message: 'How can I help you today?',
   com_nav_auto_scroll: 'Auto-scroll to Newest on Open',
   com_nav_plugin_store: 'Plugin store',
   com_nav_plugin_search: 'Search plugins',
@@ -280,4 +283,6 @@ export default {
   com_nav_lang_vietnamese: 'Tiếng Việt',
   com_nav_lang_traditionalchinese: '繁體中文',
   com_nav_lang_arabic: 'العربية',
+  com_nav_lang_turkish: 'Türkçe',
+  com_nav_lang_dutch: 'Nederlands',
 };
