@@ -24,9 +24,9 @@ const router = OpenAPIRouter<IRequest, CF>({
       version: '1.0',
     },
   },
-  base: '/',
-  docs_url: '/api/docs',
-  openapi_url: '/api/openapi.json',
+  base: '/api',
+  docs_url: '/docs',
+  openapi_url: '/openapi.json',
 });
 
 const protectedRoutes = {
@@ -35,16 +35,13 @@ const protectedRoutes = {
 
 router
   .options('*', preflight)
-  .all('/api/*', withCfHeaders())
+  .all('/*', withCfHeaders())
   // .all('/api/*', () => {})
-  .get('/api/json-data', (req: IRequest, res: Response, env: Env, ctx: ExecutionContext) =>
+  .get('/json-data', (req: IRequest, res: Response, env: Env, ctx: ExecutionContext) =>
     jsonData(req, res, env, data),
   )
-  .get(
-    '/api/hello',
-    withCfSummary(),
-    (req: IRequest, res: Response, env: Env, ctx: ExecutionContext) =>
-      jsonData(req, res, env, { hello: 'world' }),
+  .get('/hello', withCfSummary(), (req: IRequest, res: Response, env: Env, ctx: ExecutionContext) =>
+    jsonData(req, res, env, { hello: 'world' }),
   )
   // .all("*", error_handler)
   .all('*', () => error(404, 'Oops... Are you sure about that? FAaFO'));

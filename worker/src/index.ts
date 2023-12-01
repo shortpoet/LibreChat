@@ -50,27 +50,24 @@ async function handleFetchEvent(
   switch (true) {
     case path === '/redirect':
       return handleRedirect.fetch(request, env, ctx);
-      break;
     case path === '/proxy':
       return handleProxy.fetch(request, env, ctx);
-      break;
     case isAPiURL(url):
       log(`[worker] index.handleFetchEvent -> ${env.WORKER_ENVIRONMENT} -> ${url.pathname}`);
-
       res = await api.handle(request, resp, env, ctx);
       log(`[worker] index.handleFetchEvent -> api response ${true}`);
       // logObjs([res, res.headers]);
       logWorkerEnd(request, res);
       return res;
-
-      break;
     default:
       return new Response(
         `Try making requests to:
         <ul>
         <li><code><a href="/redirect?redirectUrl=https://example.com/">/redirect?redirectUrl=https://example.com/</a></code>,</li>
         <li><code><a href="/proxy?modify&proxyUrl=https://example.com/">/proxy?modify&proxyUrl=https://example.com/</a></code>, or</li>
-        <li><code><a href="/api/todos">/api/todos</a></code></li>`,
+        <li><code><a href="/api/hello">/api/hello</a></code></li>,
+        <li><code><a href="/api/json-data">/api/json-data</a></code></li>,
+        <li><code><a href="/api/docs">/api/docs</a></code></li>`,
         { headers: { 'Content-Type': 'text/html' } },
       );
   }
