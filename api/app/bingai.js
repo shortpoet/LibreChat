@@ -20,6 +20,11 @@ const askBing = async ({
 }) => {
   const isUserProvided = process.env.BINGAI_TOKEN === 'user_provided';
 
+  console.log('');
+  console.log('ASK BING');
+  console.log('text', text);
+  console.log('');
+
   let key = null;
   if (expiresAt && isUserProvided) {
     checkUserKeyExpiry(
@@ -27,6 +32,7 @@ const askBing = async ({
       'Your BingAI Cookies have expired. Please provide your cookies again.',
     );
     key = await getUserKey({ userId, name: 'bingAI' });
+    console.log('key', key);
   }
 
   const { BingAIClient } = await import('nodejs-gpt');

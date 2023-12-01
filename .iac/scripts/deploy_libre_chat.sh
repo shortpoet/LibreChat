@@ -123,8 +123,11 @@ if [ ! -x "$(command -v ./meilisearch)" ]; then
 fi
 
 if [ -x "$(command -v ./meilisearch)" ]; then
+  echo -e "\nStarting meilisearch\n"
   ./meilisearch --master-key "${meili_master_key}" &
 fi
+
+echo -e "\nStarting backend\n"
 
 APP_TITLE=${title} \
   HOST=${host} \
