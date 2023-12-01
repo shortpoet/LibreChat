@@ -61,7 +61,7 @@ Have fun!
   - **IMPORTANT : If you install the files somewhere else modify the instructions accordingly**
   
 ### Enable the Conversation search feature: (optional)
-		
+    
   - Download MeiliSearch latest release from : https://github.com/meilisearch/meilisearch/releases
   - Copy it to "C:/LibreChat/"
   - Rename the file to "meilisearch.exe"

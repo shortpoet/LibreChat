@@ -34,7 +34,8 @@
     "setupTests.js",
     "vite.config.ts",
     "env.d.ts",
-    "../vite.config.ts"
+    "../vite.config.ts",
+    "../worker/**/*"
   ],
   "references": [
     {
