@@ -1,4 +1,4 @@
-name = "LibreChat-Shortpoet"
+name = "librechat-shortpoet"
 main = "src/index.ts"
 compatibility_date = "2023-11-21"
 

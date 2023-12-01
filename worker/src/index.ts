@@ -9,10 +9,14 @@
  */
 
 import { ExecutionContext } from '@cloudflare/workers-types';
-import handleProxy from './proxy';
-import handleRedirect from './redirect';
-import apiRouter from './router';
+import passport from 'passport';
+import handleProxy from './middleware/proxy';
+import handleRedirect from './middleware/redirect';
 import { MethodNotAllowedError, NotFoundError } from '@cloudflare/kv-asset-handler/dist/types';
+import { isAPiURL, isAssetURL, logWorkerEnd, logWorkerStart, logger } from './utils';
+import { Api as api } from './api';
+
+const FILE_LOG_LEVEL = 'debug';
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -38,28 +42,36 @@ async function handleFetchEvent(
   ctx: ExecutionContext,
 ): Promise<Response> {
   const url = new URL(request.url);
+  // const resp = new Response('');
+  const resp = new Response('', { cf: request.cf });
+  const log = logger(FILE_LOG_LEVEL, env);
   const path = url.pathname;
-
-  // You can get pretty far with simple logic like if/switch-statements
-  switch (url.pathname) {
-    case '/redirect':
+  let res;
+  switch (true) {
+    case path === '/redirect':
       return handleRedirect.fetch(request, env, ctx);
-
-    case '/proxy':
+      break;
+    case path === '/proxy':
       return handleProxy.fetch(request, env, ctx);
-  }
+      break;
+    case isAPiURL(url):
+      log(`[worker] index.handleFetchEvent -> ${env.WORKER_ENVIRONMENT} -> ${url.pathname}`);
 
-  if (url.pathname.startsWith('/api/')) {
-    // You can also use more robust routing
-    return apiRouter.handle(request);
-  }
+      res = await api.handle(request, resp, env, ctx);
+      log(`[worker] index.handleFetchEvent -> api response ${true}`);
+      // logObjs([res, res.headers]);
+      logWorkerEnd(request, res);
+      return res;
 
-  return new Response(
-    `Try making requests to:
-    <ul>
-    <li><code><a href="/redirect?redirectUrl=https://example.com/">/redirect?redirectUrl=https://example.com/</a></code>,</li>
-    <li><code><a href="/proxy?modify&proxyUrl=https://example.com/">/proxy?modify&proxyUrl=https://example.com/</a></code>, or</li>
-    <li><code><a href="/api/todos">/api/todos</a></code></li>`,
-    { headers: { 'Content-Type': 'text/html' } },
-  );
+      break;
+    default:
+      return new Response(
+        `Try making requests to:
+        <ul>
+        <li><code><a href="/redirect?redirectUrl=https://example.com/">/redirect?redirectUrl=https://example.com/</a></code>,</li>
+        <li><code><a href="/proxy?modify&proxyUrl=https://example.com/">/proxy?modify&proxyUrl=https://example.com/</a></code>, or</li>
+        <li><code><a href="/api/todos">/api/todos</a></code></li>`,
+        { headers: { 'Content-Type': 'text/html' } },
+      );
+  }
 }

@@ -8,6 +8,6 @@ export default {
     }
 
     // The Response class has static methods to create common Response objects as a convenience
-    return Response.redirect(redirectUrl);
+    return Response.redirect(redirectUrl, 301);
   },
 };

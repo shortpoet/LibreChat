@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { LogLevel, LOG_LOVELS } from '../types';
 import chalk from 'chalk';
 import { isAssetURL } from './request';
@@ -18,10 +19,10 @@ const logger = (level: LogLevel, env?: Env) => (msg: string | object) => {
     typeof msg === 'string'
       ? console.log(msg)
       : console.log(
-        ...Object.entries(msg).map(([key, val]) =>
-          typeof val === 'string' ? val : `${key}: ${JSON.stringify(val)}`,
-        ),
-      );
+          ...Object.entries(msg).map(([key, val]) =>
+            typeof val === 'string' ? val : `${key}: ${JSON.stringify(val)}`,
+          ),
+        );
   }
 };
 
@@ -40,8 +41,8 @@ const logWorkerStart = (request: Request) => {
         \nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         \n[worker] START main.fetch ->
         \n[${new Date().toLocaleTimeString()}] -> ${
-  request.method
-} -> ${url} -> content-type: ${headers.get('Content-Type')}\n
+        request.method
+      } -> ${url} -> content-type: ${headers.get('Content-Type')}\n
     `),
     );
     if (cf) {
@@ -67,8 +68,8 @@ const logWorkerEnd = (request: Request, response: Response) => {
       chalk.green(`
         \n[worker] END main.fetch ->
         \n[${new Date().toLocaleTimeString()}] -> ${request.method} -> ${url.pathname} -> ${
-  response.status
-} -> ${response.statusText}\n
+        response.status
+      } -> ${response.statusText}\n
       XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     `),
     );
