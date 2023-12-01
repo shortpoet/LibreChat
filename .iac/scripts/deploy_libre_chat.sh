@@ -129,6 +129,10 @@ fi
 
 echo -e "\nStarting backend\n"
 
+echo -e "\nEnvironment variables\n"
+echo -e "APP_TITLE=${title}"
+echo -e "JWT_SECRET=${jwt_secret}"
+
 APP_TITLE=${title} \
   HOST=${host} \
   PORT=${port} \
@@ -145,6 +149,8 @@ APP_TITLE=${title} \
   ALLOW_REGISTRATION=${allow_registration} \
   ALLOW_SOCIAL_LOGIN=${allow_social_login} \
   ALLOW_SOCIAL_REGISTRATION=${allow_social_registration} \
+  JWT_SECRET_DEV=${jwt_secret} \
+  JWT_SECRET_PRD=${jwt_secret} \
   JWT_SECRET=${jwt_secret} \
   JWT_REFRESH_SECRET=${jwt_refresh_secret} \
   SESSION_EXPIRY=${session_expiry} \
