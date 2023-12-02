@@ -115,10 +115,14 @@ fi
 echo -e "\nDeploying to ${ENVIRONMENT} environment\n"
 
 if [ "${RUN_INIT}" == "true" ]; then
-  echo -e "\nRunning init\n"
-  npm ci
+  echo -e "\nRunning init and build\n"
+  npm i
   APP_TITLE=${title} npm run frontend
+else
+  echo -e "\nSkipping build\n"
+  npm ci
 fi
+
 
 # check if meilisearch is executable
 # if [ ! -x "$(command -v ./meilisearch)" ]; then
