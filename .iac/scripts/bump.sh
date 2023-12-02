@@ -3,70 +3,64 @@
 set -e
 
 ENVIRONMENT=$1
-CMD=$2
-GO_LIVE=$3
-RUN_INIT=${4:-false}
-
-cur_dir="$(pwd)"
+GO_LIVE=$2
+RUN_INIT=${3:-false}
 
 if [ -z "${ENVIRONMENT}" ] || [ -z "${GO_LIVE}" ]; then
-  echo "Usage: ./deploy.sh <ENVIRONMENT> <CMD> <GO_LIVE> <RUN_INIT>"
+  echo "Usage: ./deploy.sh <ENVIRONMENT> <GO_LIVE> <RUN_INIT>"
   exit 1
 fi
 
 if [ "${GO_LIVE}" != "true" ] && [ "${GO_LIVE}" != "false" ]; then
-  echo "Usage: ./deploy.sh <ENVIRONMENT> <CMD> <GO_LIVE> <RUN_INIT>"
   echo "GO_LIVE must be true or false"
   exit 1
 fi
 
-if [ "${CMD}" != "plan" ] && [ "${CMD}" != "apply" ] && [ "${CMD}" != "destroy" ]; then
-  echo "Usage: ./deploy.sh <ENVIRONMENT> <CMD> <GO_LIVE> <RUN_INIT>"
-  echo "CMD must be plan, apply or destroy"
-  exit 1
+current_dir="$(pwd)"
+current_dir_leaf="${PWD##*/}"
+script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+iac_dir="${script_dir}/.."
+root_dir="${iac_dir}/.."
+
+echo "current_dir: ${current_dir}"
+echo "current_dir_leaf: ${current_dir_leaf}"
+echo "script_dir: ${script_dir}"
+echo "iac_dir: ${iac_dir}"
+echo "root_dir: ${root_dir}"
+
+current_branch="$(git rev-parse --abbrev-ref HEAD)"
+
+# TODO double check this
+current_tag="$(git describe --tags --abbrev=0)"
+
+next_tag="$(echo "${current_tag}" | awk -F'.' '{print $1"."$2"."$3+1}')"
+next_branch=${next_tag//./}
+echo "current branch: ${current_branch}"
+echo "current tag: ${current_tag}"
+echo "next tag: ${next_tag}"
+echo "next branch: ${next_branch}"
+
+if [ "${GO_LIVE}" == "true" ]; then
+  # ask user to confirm
+  read -p "Are you sure you want to bump to ${next_tag}? [y/N] " -n 1 -r
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Aborting"
+    exit 1
+  fi
+  cd "${root_dir}"
+
+  echo "GO_LIVE is true, bumping tag to ${next_tag}"
+  git checkout "${next_tag}"
+  git checkout -b "${next_branch}"
+
+  git checkout "${current_branch}" -- .iac
+  git checkout "${current_branch}" -- worker
+  git checkout "${current_branch}" -- .gitignore
+
+  git add .
+  git commit -m "Bump to ${next_tag}"
+  git push origin "${next_branch}"
+
+  cd "${current_dir}"
 fi
-
-declare -A secrets=(
-  ["mongo_uri"]="Cloud/atlas/mongodb/librechat/furtive-fox-88/connection_string"
-  ["openai_api_key"]="Cloud/openai/ai-maps/dev/api_key"
-  ["meili_master_key"]="Cloud/meili/LibreChat/dev/meili_master_key"
-  ["jwt_secret"]="Deployments/LibreChat/dev/jwt_secret"
-  ["jwt_refresh_secret"]="Deployments/LibreChat/dev/jwt_refresh_secret"
-  ["github_client_id"]="Github/oauth/ai-maps/preview/GITHUB_CLIENT_ID"
-  ["github_client_secret"]="Github/oauth/ai-maps/preview/GITHUB_CLIENT_SECRET"
-)
-get_secret_value() {
-  pass "$1"
-}
-var_string=''
-for secret_name in "${!secrets[@]}"; do
-  secret_value=$(get_secret_value "${secrets[$secret_name]}")
-  var_string+=" -var=\"$secret_name=$secret_value\""
-done
-# echo "var_string: ${var_string}"
-cd "/Users/Shared/source/repos/forks/LibreChat/.iac/infra_app/azure/envs/$ENVIRONMENT"
-
-if [ "${RUN_INIT}" == "true" ]; then
-  terraform init
-fi
-# cmd="terraform import $var_string \"module.webapp.azurerm_linux_web_app.librechat\" \"subscriptions/060cfbfe-45ab-4a1c-84fc-c056e94221be/resourceGroups/librechat-dev/providers/Microsoft.Web/sites/librechatapp-dev\""
-cmd="terraform plan $var_string -out $ENVIRONMENT.tfplan"
-cmd="terraform destroy $var_string -auto-approve"
-
-if [[ "${CMD}" == "plan" ]]; then
-  cmd="terraform plan $var_string -out $ENVIRONMENT.tfplan"
-elif [[ "${CMD}" == "apply" ]]; then
-  cmd="terraform apply --auto-approve $var_string $ENVIRONMENT.tfplan"
-elif [[ "${CMD}" == "destroy" ]]; then
-  cmd="terraform destroy $var_string -auto-approve"
-fi
-# echo "$cmd"
-eval "$cmd"
-
-cd "$cur_dir"
-
-# uri="https://management.azure.com/subscriptions/060cfbfe-45ab-4a1c-84fc-c056e94221be/providers/Microsoft.CognitiveServices/skus?api-version=2021-10-01"
-# access_token=$(az account get-access-token --query accessToken --output tsv)
-# headers="Authorization: Bearer $access_token"
-# data=$(curl "$uri" -H "$headers" -H "Content-Type: application/json" )
-# echo "$data" | jq -r '.value[] | select(.kind == "Open AI") | .name'
