@@ -56,22 +56,24 @@ if [ "${GO_LIVE}" == "true" ]; then
   cd "${root_dir}"
 
   echo "GO_LIVE is true, bumping tag to ${next_tag}"
-  git checkout "${next_tag}"
-  git checkout -b "${next_branch}"
+  # git checkout "${next_tag}"
+  # git checkout -b "${next_branch}"
 
-  git checkout "${current_branch}" -- .iac
-  git checkout "${current_branch}" -- worker
-  git checkout "${current_branch}" -- .gitignore
-  git checkout "${current_branch}" -- .eslintrc.js
-  git checkout "${current_branch}" -- prettier.config.js
-  git checkout "${current_branch}" -- package.json
-  git checkout "${current_branch}" -- package-lock.json
-  git checkout "${current_branch}" -- client/tailwind.config.cjs
+  # git checkout "${current_branch}" -- .iac
+  # git checkout "${current_branch}" -- worker
+  # git checkout "${current_branch}" -- .gitignore
+  # git checkout "${current_branch}" -- .eslintrc.js
+  # git checkout "${current_branch}" -- prettier.config.js
+  # git checkout "${current_branch}" -- package.json
+  # git checkout "${current_branch}" -- package-lock.json
+  # git checkout "${current_branch}" -- client/tailwind.config.cjs
 
-  git add .
-  git commit -m "Bump to ${next_tag}"
-  git push origin "${next_branch}"
+  # git add .
+  # git commit -m "Bump to ${next_tag}"
+  # git push origin "${next_branch}"
 
-  cd "${current_dir}"
-  git difftool "${current_branch}" "${next_branch}"
+  # cd "${current_dir}"
+  # git difftool "${current_branch}" "${next_branch}"
+  echo "Bump complete, please review the changes and push to origin"
+  echo "git merge --no-ff ${next_branch}"
 fi
