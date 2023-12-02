@@ -9,6 +9,7 @@ router.post('/', async (req, res) => {
   const {
     model,
     text,
+    overrideParentMessageId=null,
     parentMessageId,
     conversationId: oldConversationId,
     ...convo
@@ -37,8 +38,10 @@ router.post('/', async (req, res) => {
     ...convo
   });
 
-  await saveMessage(userMessage);
-  await saveConvo({ ...userMessage, model, ...convo });
+  if (!overrideParentMessageId) {
+    await saveMessage(userMessage);
+    await saveConvo(req?.session?.user?.username, { ...userMessage, model, ...convo });
+  }
 
   return await ask({
     isNewConversation,
@@ -46,6 +49,7 @@ router.post('/', async (req, res) => {
     model,
     convo,
     preSendRequest: true,
+    overrideParentMessageId,
     req,
     res
   });
@@ -80,6 +84,14 @@ const ask = async ({
 
   try {
     const progressCallback = createOnProgress();
+
+    const abortController = new AbortController();
+    res.on('close', () => {
+      console.log('The client has disconnected.');
+      // 执行其他操作
+      abortController.abort();
+    })
+
     let response = await askSydney({
       text,
       onProgress: progressCallback.call(null, model, {
@@ -91,7 +103,8 @@ const ask = async ({
         parentMessageId: userParentMessageId,
         conversationId,
         ...convo
-      }
+      },
+      abortController
     });
 
     console.log('SYDNEY RESPONSE', response);
@@ -102,7 +115,8 @@ const ask = async ({
     userMessage.conversationId = response.conversationId || conversationId;
     userMessage.invocationId = response.invocationId;
     // Unlike gpt and bing, Sydney will never accept our given userMessage.messageId, it will generate its own one.
-    await saveMessage(userMessage);
+    if (!overrideParentMessageId)
+      await saveMessage(userMessage);
 
     // Save sydney response
     // response.id = response.messageId;
@@ -111,8 +125,8 @@ const ask = async ({
     response.conversationSignature = convo.conversationSignature
       ? convo.conversationSignature
       : crypto.randomUUID();
-    response.text = response.response;
-    delete response.response;
+    response.text = response.response || response.details.spokenText || '**Bing refused to answer.**';
+    // delete response.response;
     response.suggestions =
       response.details.suggestedResponses &&
       response.details.suggestedResponses.map((s) => s.text);
@@ -125,25 +139,30 @@ const ask = async ({
 
     // Save user message
     userMessage.conversationId = response.conversationId || conversationId;
-    await saveMessage(userMessage);
+    if (!overrideParentMessageId)
+      await saveMessage(userMessage);
 
     // Bing API will not use our conversationId at the first time,
     // so change the placeholder conversationId to the real one.
     // Attition: the api will also create new conversationId while using invalid userMessage.parentMessageId,
     // but in this situation, don't change the conversationId, but create new convo.
     if (conversationId != userMessage.conversationId && isNewConversation)
-      await saveConvo({
-        conversationId: conversationId,
-        newConversationId: userMessage.conversationId
-      });
+      await saveConvo(
+        req?.session?.user?.username,
+        {
+          conversationId: conversationId,
+          newConversationId: userMessage.conversationId
+        }
+      );
     conversationId = userMessage.conversationId;
 
     response.text = await handleText(response, true);
     // Save sydney response & convo, then send
     await saveMessage(response);
-    await saveConvo({ ...response, model, chatGptLabel: null, promptPrefix: null, ...convo });
+    await saveConvo(req?.session?.user?.username, { ...response, model, chatGptLabel: null, promptPrefix: null, ...convo });
+    
     sendMessage(res, {
-      title: await getConvoTitle(conversationId),
+      title: await getConvoTitle(req?.session?.user?.username, conversationId),
       final: true,
       requestMessage: userMessage,
       responseMessage: response
@@ -153,10 +172,13 @@ const ask = async ({
     if (userParentMessageId == '00000000-0000-0000-0000-000000000000') {
       const title = await titleConvo({ model, text, response });
 
-      await saveConvo({
-        conversationId,
-        title
-      });
+      await saveConvo(
+        req?.session?.user?.username,
+        {
+          conversationId,
+          title
+        }
+      );
     }
   } catch (error) {
     console.log(error);
