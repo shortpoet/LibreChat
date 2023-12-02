@@ -32,18 +32,33 @@ current_branch="$(git rev-parse --abbrev-ref HEAD)"
 
 # TODO double check this
 current_tag="$(git describe --tags --abbrev=0)"
+tag_list="$(git tag --sort=creatordate)"
+tag_array=("${tag_list// / }")
 
-next_tag="$(echo "${current_tag}" | awk -F'.' '{print $1"."$2"."$3+1}')"
+current_tag_index=$(printf '%s\n' "${tag_list}" | grep -n "${current_tag}" | cut -d: -f1)
+
+if [[ -n "$current_tag_index" ]]; then
+    next_tag_index=$((current_tag_index + 1))
+    next_tag=$(printf '%s\n' "${tag_list}" | sed -n "${next_tag_index}p")
+    echo "Next tag after ${current_tag}: ${next_tag}"
+else
+    echo "Current tag not found in the tag list."
+fi
+
+# next_tag="$(echo "${current_tag}" | awk -F'.' '{print $1"."$2"."$3+1}')"
+
 next_branch=${next_tag//./}
 has_changes="$(git status --porcelain)"
-if [ -n "${has_changes}" ]; then
-  echo "You have uncommitted changes, please commit or stash them before bumping"
-  exit 1
-fi
+
 echo "current branch: ${current_branch}"
 echo "current tag: ${current_tag}"
 echo "next tag: ${next_tag}"
 echo "next branch: ${next_branch}"
+
+if [ -n "${has_changes}" ]; then
+  echo "You have uncommitted changes, please commit or stash them before bumping"
+  exit 1
+fi
 
 if [ "${GO_LIVE}" == "true" ]; then
   # ask user to confirm
@@ -57,7 +72,7 @@ if [ "${GO_LIVE}" == "true" ]; then
 
   echo "GO_LIVE is true, bumping tag to ${next_tag}"
   # git checkout "${next_tag}"
-  # git checkout -b "${next_branch}"
+  git checkout -b "${next_branch}"
 
   # git checkout "${current_branch}" -- .iac
   # git checkout "${current_branch}" -- worker
