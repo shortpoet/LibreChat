@@ -98,5 +98,5 @@ if [ "${GO_LIVE}" == "true" ]; then
   # cd "${current_dir}"
   # git difftool "${current_branch}" "${next_branch}"
   echo "Bump complete, please review the changes and push to origin"
-  echo "git merge --no-ff ${next_branch}"
+  echo "git merge --no-ff ${next_tag}"
 fi

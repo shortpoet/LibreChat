@@ -18,7 +18,7 @@ router.use('/sydney', askSydney);
 
 router.post('/', async (req, res) => {
   let { model, text, parentMessageId, conversationId, chatGptLabel, promptPrefix } = req.body;
-  if (!text.trim().includes(' ') && text.length < 5) {
+  if (text.length === 0) {
     return handleError(res, 'Prompt empty or too short');
   }
 
@@ -77,6 +77,10 @@ router.post('/', async (req, res) => {
         sendMessage(res, { ...partial, message: true });
       } else {
         tokens += partial === text ? '' : partial;
+        if (tokens.match(/^\n/)) {
+          tokens = tokens.replace(/^\n/, '');
+        }
+
         if (tokens.includes('[DONE]')) {
           tokens = tokens.replace('[DONE]', '');
         }

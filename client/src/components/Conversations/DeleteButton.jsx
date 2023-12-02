@@ -5,16 +5,19 @@ import manualSWR from '~/utils/fetchers';
 import { useDispatch } from 'react-redux';
 import { setNewConvo, removeConvo } from '~/store/convoSlice';
 import { setMessages } from '~/store/messageSlice';
+import { setSubmission } from '~/store/submitSlice';
 
-export default function DeleteButton({ conversationId, renaming, cancelHandler }) {
+export default function DeleteButton({ conversationId, renaming, cancelHandler, retainView }) {
   const dispatch = useDispatch();
   const { trigger } = manualSWR(
-    `http://localhost:3535/api/convos/clear`,
+    `/api/convos/clear`,
     'post',
     () => {
       dispatch(setMessages([]));
       dispatch(removeConvo(conversationId));
       dispatch(setNewConvo());
+      dispatch(setSubmission({}));
+      retainView();
     }
   );
 

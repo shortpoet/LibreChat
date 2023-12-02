@@ -3,9 +3,10 @@ version: '2'
 services:
   client:
     image: react-client
+    build: ./client
     restart: always
     ports:
-      - '3535:80'
+      - '3080:80'
     volumes:
       - ./client:/client
       - /client/node_modules
@@ -15,15 +16,16 @@ services:
       - webappnetwork
   api:
     image: node-api
+    build: ./api
     restart: always
+    env_file:
+      - ./api/.env
     environment:
-      - PORT=3535
+      - HOST=0.0.0.0
+      - NODE_ENV=production
       - MONGO_URI=mongodb://mongodb:27017/chatgpt-clone
-      - OPENAI_KEY=""
-      - CHATGPT_TOKEN=""
-      - BING_TOKEN=""
     ports:
-      - '9000:3535'
+      - '9000:3080'
     volumes:
       - ./api:/api
       - /api/node_modules

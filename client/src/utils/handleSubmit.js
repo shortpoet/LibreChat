@@ -9,21 +9,20 @@ export default function handleSubmit({
   convoHandler,
   errorHandler,
   chatGptLabel,
-  promptPrefix
+  promptPrefix,
 }) {
-  const endpoint = `http://localhost:3535/api/ask`;
+  const endpoint = `/api/ask`;
   let payload = { model, text, chatGptLabel, promptPrefix };
   if (convo.conversationId && convo.parentMessageId) {
     payload = {
       ...payload,
       conversationId: convo.conversationId,
-      parentMessageId: convo.parentMessageId
+      parentMessageId: convo.parentMessageId,
     };
   }
 
   const isBing = model === 'bingai' || model === 'sydney';
   if (isBing && convo.conversationId) {
-
     payload = {
       ...payload,
       jailbreakConversationId: convo.jailbreakConversationId,
@@ -37,10 +36,10 @@ export default function handleSubmit({
   let server = endpoint;
   server = model === 'bingai' ? server + '/bing' : server;
   server = model === 'sydney' ? server + '/sydney' : server;
-  
+
   const events = new SSE(server, {
     payload: JSON.stringify(payload),
-    headers: { 'Content-Type': 'application/json' }
+    headers: { 'Content-Type': 'application/json' },
   });
 
   events.onopen = function () {
@@ -51,7 +50,7 @@ export default function handleSubmit({
     const data = JSON.parse(e.data);
     let text = data.text || data.response;
     if (data.message) {
-      messageHandler(text);
+      messageHandler(text, events);
     }
 
     if (data.final) {
@@ -67,6 +66,12 @@ export default function handleSubmit({
     events.close();
     errorHandler(e);
   };
+
+  events.addEventListener('stop', () => {
+    // Close the SSE stream
+    console.log('stop event received');
+    events.close();
+  });
 
   events.stream();
 }
