@@ -57,7 +57,15 @@ echo "next branch: ${next_branch}"
 
 if [ -n "${has_changes}" ]; then
   echo "You have uncommitted changes, please commit or stash them before bumping"
-  exit 1
+  read -p "Would you like to auto commit your changes? [y/N] " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    git add .
+    git commit -m "Auto commit before bumping to ${next_tag}"
+  else
+    echo "Aborting"
+    exit 1
+  fi
 fi
 
 if [ "${GO_LIVE}" == "true" ]; then
@@ -83,8 +91,8 @@ if [ "${GO_LIVE}" == "true" ]; then
   # git checkout "${current_branch}" -- package-lock.json
   # git checkout "${current_branch}" -- client/tailwind.config.cjs
 
-  git add .
-  git commit -m "Bump to ${next_tag}"
+  # git add .
+  # git commit -m "Bump to ${next_tag}"
   git push origin "${next_branch}"
 
   # cd "${current_dir}"
