@@ -127,7 +127,7 @@ else
 fi
 
 
-check if meilisearch is executable
+# check if meilisearch is executable
 if [ ! -x "$(command -v ./meilisearch)" ]; then
   echo "meilisearch is not executable"
   sudo chmod +x ./meilisearch
