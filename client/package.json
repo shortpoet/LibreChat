@@ -32,7 +32,7 @@
     "highlight.js": "^11.7.0",
     "lodash": "^4.17.21",
     "lucide-react": "^0.113.0",
-    "markdown-to-jsx": "^7.1.9",
+    "markdown-to-jsx": "^7.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-highlight": "^0.15.0",

@@ -5,10 +5,10 @@ import './PageShell.css'
 import { PageContextProvider } from './usePageContext'
 import { Link } from './Link'
 import { childrenPropType } from './PropTypeValues'
-import { Provider } from 'react-redux';
-import { store } from '../../client/src/store';
-import { ThemeProvider } from '../../client/src/hooks/ThemeContext';
-import App from '../../client/src/App';
+// import { Provider } from 'react-redux';
+// import { store } from '../../client/src/store';
+// import { ThemeProvider } from '../../client/src/hooks/ThemeContext';
+// import App from '../../client/src/App';
 import '../../client/src/style.css';
 import '../../client/src/mobile.css';
 
@@ -20,15 +20,14 @@ PageShell.propTypes = {
   children: childrenPropType
 }
 function PageShell({ pageContext, children }) {
+  // if (typeof window === 'undefined') {
+  //   return (<></>)
+  // }
+
   return (
     <React.StrictMode>
       <PageContextProvider pageContext={pageContext}>
-          <Provider store={store}>
-            <ThemeProvider>
-              <App />
-              <Content>{children}</Content>
-            </ThemeProvider>
-          </Provider>
+        <Content>{children}</Content>
       </PageContextProvider>
     </React.StrictMode>
   )
