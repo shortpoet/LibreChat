@@ -6,9 +6,8 @@ import ReactDOMServer from 'react-dom/server'
 import { PageShell } from './PageShell'
 import { escapeInject, dangerouslySkipEscape } from 'vike/server'
 import logoUrl from './logo.svg'
-import type { PageContextServer } from './types'
 
-async function render(pageContext: PageContextServer) {
+async function render(pageContext) {
   const { Page, pageProps } = pageContext
   // This render() hook only supports SSR, see https://vike.dev/render-modes for how to modify render() to support SPA
   if (!Page) throw new Error('My render() hook expects pageContext.Page to be defined')

@@ -2,15 +2,20 @@
 // See https://vike.dev/pageContext-anywhere
 
 import React, { useContext } from 'react'
-import type { PageContext } from './types'
+import PropTypes from 'prop-types'
+import { childrenPropType } from './PropTypeValues'
 
 export { PageContextProvider }
 // eslint-disable-next-line react-refresh/only-export-components
 export { usePageContext }
 
-const Context = React.createContext<PageContext>(undefined as unknown as PageContext)
+const Context = React.createContext(undefined)
 
-function PageContextProvider({ pageContext, children }: { pageContext: PageContext; children: React.ReactNode }) {
+PageContextProvider.propTypes = {
+  pageContext: PropTypes.any,
+  children: childrenPropType
+}
+function PageContextProvider({ pageContext, children }) {
   return <Context.Provider value={pageContext}>{children}</Context.Provider>
 }
 

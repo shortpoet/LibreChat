@@ -1,34 +1,43 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import logo from './logo.svg'
-import { PageContextProvider } from './usePageContext'
-import type { PageContext } from './types'
 import './PageShell.css'
+import { PageContextProvider } from './usePageContext'
 import { Link } from './Link'
+import { childrenPropType } from './PropTypeValues'
+import { Provider } from 'react-redux';
+import { store } from '../../client/src/store';
+import { ThemeProvider } from '../../client/src/hooks/ThemeContext';
+import App from '../../client/src/App';
+import '../../client/src/style.css';
+import '../../client/src/mobile.css';
+
 
 export { PageShell }
 
-function PageShell({ children, pageContext }: { children: React.ReactNode; pageContext: PageContext }) {
+PageShell.propTypes = {
+  pageContext: PropTypes.any,
+  children: childrenPropType
+}
+function PageShell({ pageContext, children }) {
   return (
     <React.StrictMode>
       <PageContextProvider pageContext={pageContext}>
-        <Layout>
-          <Sidebar>
-            <Logo />
-            <Link className="navitem" href="/">
-              Home
-            </Link>
-            <Link className="navitem" href="/about">
-              About
-            </Link>
-          </Sidebar>
-          <Content>{children}</Content>
-        </Layout>
+          <Provider store={store}>
+            <ThemeProvider>
+              <App />
+              <Content>{children}</Content>
+            </ThemeProvider>
+          </Provider>
       </PageContextProvider>
     </React.StrictMode>
   )
 }
 
-function Layout({ children }: { children: React.ReactNode }) {
+Layout.propTypes = {
+  children: childrenPropType
+}
+function Layout({ children }) {
   return (
     <div
       style={{
@@ -42,7 +51,10 @@ function Layout({ children }: { children: React.ReactNode }) {
   )
 }
 
-function Sidebar({ children }: { children: React.ReactNode }) {
+Sidebar.propTypes = {
+  children: childrenPropType
+}
+function Sidebar({ children }) {
   return (
     <div
       style={{
@@ -59,7 +71,10 @@ function Sidebar({ children }: { children: React.ReactNode }) {
   )
 }
 
-function Content({ children }: { children: React.ReactNode }) {
+Content.propTypes = {
+  children: childrenPropType
+}
+function Content({ children }) {
   return (
     <div
       style={{

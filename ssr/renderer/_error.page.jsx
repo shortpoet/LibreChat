@@ -1,6 +1,11 @@
+import PropTypes from 'prop-types'
+
 export { Page }
 
-function Page({ is404 }: { is404: boolean }) {
+Page.propTypes = {
+  is404: PropTypes.bool
+}
+function Page({ is404 }) {
   if (is404) {
     return (
       <>
