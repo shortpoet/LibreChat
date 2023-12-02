@@ -3,6 +3,7 @@
 # Logs
 data-node
 meili_data
+data/
 logs
 *.log
 
@@ -26,6 +27,7 @@ dist/
 public/main.js
 public/main.js.map
 public/main.js.LICENSE.txt
+client/public/images/
 client/public/main.js
 client/public/main.js.map
 client/public/main.js.LICENSE.txt
@@ -38,6 +40,7 @@ meili_data/
 api/node_modules/
 client/node_modules/
 bower_components/
+*.d.ts
 
 # Floobits
 .floo
@@ -46,11 +49,60 @@ bower_components/
 .flooignore
 
 # Environment
-.env
+.npmrc
+.env*
+my.secrets
+!**/.env.example
+!**/.env.test.example
 cache.json
 api/data/
 owner.yml
 archive
 .vscode/settings.json
-
 src/style - official.css
+/e2e/specs/.test-results/
+/e2e/playwright-report/
+/playwright/.cache/
+.DS_Store
+*.code-workspace
+.idea
+*.pem
+config.local.ts
+**/storageState.json
+junit.xml
+
+# meilisearch
+meilisearch
+meilisearch.exe
+data.ms/*
+auth.json
+
+/packages/ux-shared/
+/images
+
+# terraform
+**/.terraform/*
+
+*.tfstate
+*.tfstate.*
+**/*.tfstate
+**/*.tfstate.*
+
+# Crash log files
+crash.log
+
+# Ignore override files as they are usually used to override resources locally and so
+# are not checked in
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Include override files you do wish to add to version control using negated pattern
+#
+!example_override.tf
+
+# Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
+# example: *tfplan*
+**/*.tfplan
+**/*.tfplan.*
