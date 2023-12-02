@@ -18,9 +18,9 @@ fi
 
 # app
 title='Shortpoet-LibreChat'
-port=3080
-domain_client='http://0.0.0.0:3080'
-domain_server='http://0.0.0.0:3080'
+port=3535
+domain_client='http://0.0.0.0:3535'
+domain_server='http://0.0.0.0:3535'
 host='0.0.0.0'
 # chat
 check_balance=false

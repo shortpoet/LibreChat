@@ -6,8 +6,8 @@ COPY package*.json /api/
 RUN npm install
 # Copy the current directory contents into the container at /api
 COPY . /api/
-# Make port 3080 available to the world outside this container
-EXPOSE 3080
+# Make port 3535 available to the world outside this container
+EXPOSE 3535
 # Run the app when the container launches
 CMD ["npm", "start"]
 
