@@ -10,7 +10,7 @@ export default function ClearConvos() {
   const dispatch = useDispatch();
   const { mutate } = useSWRConfig();
 
-  const { trigger } = manualSWR(`http://localhost:3080/api/convos/clear`, 'post', () => {
+  const { trigger } = manualSWR(`http://localhost:3535/api/convos/clear`, 'post', () => {
     dispatch(setMessages([]));
     dispatch(
       setConversation({
@@ -20,7 +20,7 @@ export default function ClearConvos() {
         parentMessageId: null
       })
     );
-    mutate(`http://localhost:3080/api/convos`);
+    mutate(`http://localhost:3535/api/convos`);
   });
 
   const clickHandler = () => {

@@ -18,9 +18,9 @@ fi
 
 # app
 title='Shortpoet-LibreChat'
-port=3080
-domain_client='http://0.0.0.0:3080'
-domain_server='http://0.0.0.0:3080'
+port=3535
+domain_client='http://0.0.0.0:3535'
+domain_server='http://0.0.0.0:3535'
 host='0.0.0.0'
 # chat
 check_balance=false
@@ -60,7 +60,8 @@ if [ "${is_pass_unlocked}" != "true" ]; then
   exit 1
 fi
 
-mongo_uri="$(pass Cloud/atlas/mongodb/librechat/furtive-fox-88/connection_string)"
+# mongo_uri="$(pass Cloud/atlas/mongodb/librechat/furtive-fox-88/connection_string)"
+mongo_uri='mongodb://127.0.0.1:27017/chatgpt-clone'
 # openai_api_key="user_provided"
 openai_api_key="$(pass Cloud/openai/ai-maps/dev/api_key)"
 meili_master_key="$(pass Cloud/meili/LibreChat/dev/meili_master_key)"
@@ -156,4 +157,5 @@ APP_TITLE=${title} \
   EMAIL_USERNAME=${email_username} \
   EMAIL_PASSWORD=${email_password} \
   EMAIL_FROM=${email_from} \
-  npm run backend
+  npm run backend:dev
+  # npm run backend
