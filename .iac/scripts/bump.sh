@@ -35,6 +35,11 @@ current_tag="$(git describe --tags --abbrev=0)"
 
 next_tag="$(echo "${current_tag}" | awk -F'.' '{print $1"."$2"."$3+1}')"
 next_branch=${next_tag//./}
+has_changes="$(git status --porcelain)"
+if [ -n "${has_changes}" ]; then
+  echo "You have uncommitted changes, please commit or stash them before bumping"
+  exit 1
+fi
 echo "current branch: ${current_branch}"
 echo "current tag: ${current_tag}"
 echo "next tag: ${next_tag}"
@@ -51,16 +56,16 @@ if [ "${GO_LIVE}" == "true" ]; then
   cd "${root_dir}"
 
   echo "GO_LIVE is true, bumping tag to ${next_tag}"
-  git checkout "${next_tag}"
+  # git checkout "${next_tag}"
   git checkout -b "${next_branch}"
 
-  git checkout "${current_branch}" -- .iac
-  git checkout "${current_branch}" -- worker
-  git checkout "${current_branch}" -- .gitignore
+  # git checkout "${current_branch}" -- .iac
+  # git checkout "${current_branch}" -- worker
+  # git checkout "${current_branch}" -- .gitignore
 
-  git add .
-  git commit -m "Bump to ${next_tag}"
-  git push origin "${next_branch}"
+  # git add .
+  # git commit -m "Bump to ${next_tag}"
+  # git push origin "${next_branch}"
 
   cd "${current_dir}"
 fi
