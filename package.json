@@ -34,6 +34,9 @@
     "url": "https://github.com/shortpoet/LibreChat/issues"
   },
   "homepage": "https://github.com/shortpoet/LibreChat#readme",
+  "dependencies": {
+    "sanitize-html": "^2.10.0"
+  },
   "devDependencies": {
     "@playwright/test": "^1.38.1",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
