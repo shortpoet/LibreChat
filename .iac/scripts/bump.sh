@@ -56,16 +56,20 @@ if [ "${GO_LIVE}" == "true" ]; then
   cd "${root_dir}"
 
   echo "GO_LIVE is true, bumping tag to ${next_tag}"
-  # git checkout "${next_tag}"
+  git checkout "${next_tag}"
   git checkout -b "${next_branch}"
 
-  # git checkout "${current_branch}" -- .iac
-  # git checkout "${current_branch}" -- worker
-  # git checkout "${current_branch}" -- .gitignore
+  git checkout "${current_branch}" -- .iac
+  git checkout "${current_branch}" -- worker
+  git checkout "${current_branch}" -- .gitignore
+  git checkout "${current_branch}" -- .eslintrc.js
+  git checkout "${current_branch}" -- prettier.config.js
+  git checkout "${current_branch}" -- package.json
+  git checkout "${current_branch}" -- package-lock.json
 
-  # git add .
-  # git commit -m "Bump to ${next_tag}"
-  # git push origin "${next_branch}"
+  git add .
+  git commit -m "Bump to ${next_tag}"
+  git push origin "${next_branch}"
 
   cd "${current_dir}"
 fi
