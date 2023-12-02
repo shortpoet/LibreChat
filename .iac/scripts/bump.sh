@@ -66,10 +66,12 @@ if [ "${GO_LIVE}" == "true" ]; then
   git checkout "${current_branch}" -- prettier.config.js
   git checkout "${current_branch}" -- package.json
   git checkout "${current_branch}" -- package-lock.json
+  git checkout "${current_branch}" -- client/tailwind.config.cjs
 
   git add .
   git commit -m "Bump to ${next_tag}"
   git push origin "${next_branch}"
 
   cd "${current_dir}"
+  git difftool "${current_branch}" "${next_branch}"
 fi
