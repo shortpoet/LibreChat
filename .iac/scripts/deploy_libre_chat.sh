@@ -18,7 +18,7 @@ fi
 
 # app
 title='Shortpoet-LibreChat'
-port=3000
+port=3080
 domain_client='http://0.0.0.0:3080'
 domain_server='http://0.0.0.0:3080'
 host='0.0.0.0'
