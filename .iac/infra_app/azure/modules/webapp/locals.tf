@@ -62,8 +62,8 @@ locals {
 
     JWT_SECRET         = var.jwt_secret
     JWT_REFRESH_SECRET = var.jwt_refresh_secret
-    DOMAIN_SERVER      = "http://localhost:3080"
-    DOMAIN_CLIENT      = "http://localhost:3080"
+    DOMAIN_SERVER      = "http://localhost:3535"
+    DOMAIN_CLIENT      = "http://localhost:3535"
 
     GITHUB_CLIENT_ID     = var.github_client_id
     GITHUB_CLIENT_SECRET = var.github_client_secret
@@ -86,7 +86,7 @@ locals {
     DOCKER_ENABLE_CI                    = false
     WEBSITES_PORT                       = 80
     PORT                                = 80
-    DOCKER_CUSTOM_IMAGE_NAME            = "ghcr.io/danny-avila/librechat-dev-api:latest"
+    DOCKER_CUSTOM_IMAGE_NAME            = "ghcr.io/shortpoet/librechat-dev-api:latest"
     NODE_ENV                            = "production"
   }
 

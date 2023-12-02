@@ -18,5 +18,5 @@
     "lib": ["DOM", "DOM.Iterable", "ESNext", "WebWorker"],
     "types": ["node", "@cloudflare/workers-types", "itty-router"]
   },
-  "include": ["src/**/*.ts", "worker-configuration.d.ts"]
+  "include": ["src/**/*.ts", "bindings.d.ts"]
 }

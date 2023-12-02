@@ -38,7 +38,7 @@ resource "azurerm_linux_web_app" "librechat" {
 #  Deploy code from a public GitHub repo
 # resource "azurerm_app_service_source_control" "sourcecontrol" {
 #   app_id                 = azurerm_linux_web_app.librechat.id
-#   repo_url               = "https://github.com/danny-avila/LibreChat"
+#   repo_url               = "https://github.com/shortpoet/LibreChat"
 #   branch                 = "main"    
 #   type = "Github"
 
