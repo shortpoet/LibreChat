@@ -48,6 +48,7 @@ email_service='' # eg. gmail
 email_username='' # eg. your email address if using gmail
 email_password='' # eg. this is the "app password" if using gmail
 email_from='' # email address for from field, it is required to set a value here even in the cases where it's not porperly working.
+openai_models=gpt-3.5-turbo-1106,gpt-4-1106-preview,gpt-3.5-turbo,gpt-3.5-turbo-16k,gpt-3.5-turbo-0301,text-davinci-003,gpt-4,gpt-4-0314,gpt-4-0613
 
 
 echo -e "\nAsserting VARS for ${ENVIRONMENT} environment\n"
@@ -136,6 +137,7 @@ APP_TITLE=${title} \
   CHECK_BALANCE=${check_balance} \
   MONGO_URI=${mongo_uri} \
   OPENAI_API_KEY=${openai_api_key} \
+  OPENAI_MODELS=${openai_models} \
   DEBUG_OPENAI=${debug_openai} \
   DEBUG_PLUGINS=${debug_plugins} \
   PROXY=${proxy} \
