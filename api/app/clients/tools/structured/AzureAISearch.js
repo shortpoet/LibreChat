@@ -15,71 +15,42 @@ class AzureAISearch extends StructuredTool {
 
   constructor(fields = {}) {
     super();
-    this.initializeProperties(fields);
-    this.initializeClient();
-    this.initializeSchema();
-  }
-
-  initializeProperties(fields) {
-    const getValue = (fieldNames, defaultValue) => {
-      for (const name of fieldNames) {
-        const value = fields[name] || process.env[name];
-        if (value !== undefined && value !== null) {return value;}
-      }
-      return defaultValue;
-    };
-
-    this.serviceEndpoint = getValue(
-      ['AZURE_AI_SEARCH_SERVICE_ENDPOINT', 'AZURE_COGNITIVE_SEARCH_SERVICE_ENDPOINT'],
-      this.getServiceEndpoint(),
-    );
-    this.indexName = getValue(
-      ['AZURE_AI_SEARCH_INDEX_NAME', 'AZURE_COGNITIVE_SEARCH_INDEX_NAME'],
-      this.getIndexName(),
-    );
-    this.apiKey = getValue(
-      ['AZURE_AI_SEARCH_API_KEY', 'AZURE_COGNITIVE_SEARCH_API_KEY'],
-      this.getApiKey(),
-    );
-    this.apiVersion = getValue(
-      ['AZURE_AI_SEARCH_API_VERSION', 'AZURE_COGNITIVE_SEARCH_API_VERSION'],
-      AzureAISearch.DEFAULT_API_VERSION,
-    );
-    this.queryType = getValue(
-      [
-        'AZURE_AI_SEARCH_SEARCH_OPTION_QUERY_TYPE',
-        'AZURE_COGNITIVE_SEARCH_SEARCH_OPTION_QUERY_TYPE',
-      ],
-      AzureAISearch.DEFAULT_QUERY_TYPE,
-    );
-    this.top = getValue(
-      ['AZURE_AI_SEARCH_SEARCH_OPTION_TOP', 'AZURE_COGNITIVE_SEARCH_SEARCH_OPTION_TOP'],
-      AzureAISearch.DEFAULT_TOP,
-    );
-    this.select = this.getSelect();
-  }
-
-  initializeClient() {
-    this.client = new SearchClient(
-      this.serviceEndpoint,
-      this.indexName,
-      new AzureKeyCredential(this.apiKey),
-      { apiVersion: this.apiVersion },
-    );
-  }
 
     // Initialize properties using helper function
-    this.serviceEndpoint = this._initializeField(fields.AZURE_AI_SEARCH_SERVICE_ENDPOINT, 'AZURE_AI_SEARCH_SERVICE_ENDPOINT');
-    this.indexName = this._initializeField(fields.AZURE_AI_SEARCH_INDEX_NAME, 'AZURE_AI_SEARCH_INDEX_NAME');
+    this.serviceEndpoint = this._initializeField(
+      fields.AZURE_AI_SEARCH_SERVICE_ENDPOINT,
+      'AZURE_AI_SEARCH_SERVICE_ENDPOINT',
+    );
+    this.indexName = this._initializeField(
+      fields.AZURE_AI_SEARCH_INDEX_NAME,
+      'AZURE_AI_SEARCH_INDEX_NAME',
+    );
     this.apiKey = this._initializeField(fields.AZURE_AI_SEARCH_API_KEY, 'AZURE_AI_SEARCH_API_KEY');
-    this.apiVersion = this._initializeField(fields.AZURE_AI_SEARCH_API_VERSION, 'AZURE_AI_SEARCH_API_VERSION', AzureAISearch.DEFAULT_API_VERSION);
-    this.queryType = this._initializeField(fields.AZURE_AI_SEARCH_SEARCH_OPTION_QUERY_TYPE, 'AZURE_AI_SEARCH_SEARCH_OPTION_QUERY_TYPE', AzureAISearch.DEFAULT_QUERY_TYPE);
-    this.top = this._initializeField(fields.AZURE_AI_SEARCH_SEARCH_OPTION_TOP, 'AZURE_AI_SEARCH_SEARCH_OPTION_TOP', AzureAISearch.DEFAULT_TOP);
-    this.select = this._initializeField(fields.AZURE_AI_SEARCH_SEARCH_OPTION_SELECT, 'AZURE_AI_SEARCH_SEARCH_OPTION_SELECT');
+    this.apiVersion = this._initializeField(
+      fields.AZURE_AI_SEARCH_API_VERSION,
+      'AZURE_AI_SEARCH_API_VERSION',
+      AzureAISearch.DEFAULT_API_VERSION,
+    );
+    this.queryType = this._initializeField(
+      fields.AZURE_AI_SEARCH_SEARCH_OPTION_QUERY_TYPE,
+      'AZURE_AI_SEARCH_SEARCH_OPTION_QUERY_TYPE',
+      AzureAISearch.DEFAULT_QUERY_TYPE,
+    );
+    this.top = this._initializeField(
+      fields.AZURE_AI_SEARCH_SEARCH_OPTION_TOP,
+      'AZURE_AI_SEARCH_SEARCH_OPTION_TOP',
+      AzureAISearch.DEFAULT_TOP,
+    );
+    this.select = this._initializeField(
+      fields.AZURE_AI_SEARCH_SEARCH_OPTION_SELECT,
+      'AZURE_AI_SEARCH_SEARCH_OPTION_SELECT',
+    );
 
     // Check for required fields
     if (!this.serviceEndpoint || !this.indexName || !this.apiKey) {
-      throw new Error('Missing AZURE_AI_SEARCH_SERVICE_ENDPOINT, AZURE_AI_SEARCH_INDEX_NAME, or AZURE_AI_SEARCH_API_KEY environment variable.');
+      throw new Error(
+        'Missing AZURE_AI_SEARCH_SERVICE_ENDPOINT, AZURE_AI_SEARCH_INDEX_NAME, or AZURE_AI_SEARCH_API_KEY environment variable.',
+      );
     }
 
     // Create SearchClient
@@ -87,7 +58,7 @@ class AzureAISearch extends StructuredTool {
       this.serviceEndpoint,
       this.indexName,
       new AzureKeyCredential(this.apiKey),
-      { apiVersion: this.apiVersion }
+      { apiVersion: this.apiVersion },
     );
 
     // Define schema
@@ -101,7 +72,6 @@ class AzureAISearch extends StructuredTool {
     return 'azure-ai-search';
   }
 
-  description = 'Use the \'azure-ai-search\' tool to retrieve search results relevant to your input';
   get description() {
     return 'Use the \'azure-ai-search\' tool to retrieve search results relevant to your input';
   }
@@ -113,11 +83,6 @@ class AzureAISearch extends StructuredTool {
       const searchOption = {
         queryType: this.queryType,
         top: this.top,
-        select: this.select,
-      };
-
-      const searchResults = await this.client.search(query, searchOptions);
-      return JSON.stringify(searchResults.results.map((result) => result.document));
       };
       if (this.select) {
         searchOption.select = this.select.split(',');
