@@ -251,8 +251,6 @@ export default {
   com_nav_plugin_search: 'プラグイン検索',
   com_nav_plugin_auth_error:
     'このプラグインの認証中にエラーが発生しました。もう一度お試しください。',
-  com_nav_close_menu: 'サイドバーを閉じる',
-  com_nav_open_menu: 'サイドバーを開く',
   com_nav_export_filename: 'ファイル名',
   com_nav_export_filename_placeholder: 'ファイル名を入力してください',
   com_nav_export_type: '形式',

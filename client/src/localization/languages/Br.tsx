@@ -235,8 +235,6 @@ export default {
   com_nav_plugin_search: 'Pesquisar plugins',
   com_nav_plugin_auth_error:
     'Houve um erro ao tentar autenticar este plugin. Por favor, tente novamente.',
-  com_nav_close_menu: 'Fechar barra lateral',
-  com_nav_open_menu: 'Abrir barra lateral',
   com_nav_export_filename: 'Nome do arquivo',
   com_nav_export_filename_placeholder: 'Defina o nome do arquivo',
   com_nav_export_type: 'Tipo',
