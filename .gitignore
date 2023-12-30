@@ -110,3 +110,4 @@ override.tf.json
 # example: *tfplan*
 **/*.tfplan
 **/*.tfplan.*
+!client/src/components/Nav/SettingsTabs/Data/
